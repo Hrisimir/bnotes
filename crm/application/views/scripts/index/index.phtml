@@ -1,0 +1,118 @@
+ <!-- Main Section -->
+
+                <section class="main-section grid_6">
+
+                    <div class="main-content">
+                        <header>
+                            <ul class="action-buttons clearfix fr">
+                            </ul>
+                            <h2>
+                               <?php echo $this->translate('Latest Activity');?> 
+                            </h2>
+                        </header>
+                        <section>
+                            <ul class="listing list-view">
+                            <?php // Zend_Debug::dump($this->data);die;?>
+                            <?php foreach($this->data as $note):?>
+                                 <li class="note" id="<?php echo $note['id']?>">
+                                	<?php if(isset($note["personfirstname"]) && $note["personfirstname"]):?>
+                                    	<a href="/contact/personrecord/id/<?php echo $note['id_person']?>"> 
+                                    		<?php echo $note['personfirstname']?> 
+                                    		<?php echo $note['personlastname']?>
+                                    	</a>
+                                    	<?php echo $this->translate('from'); ?>
+                                    	<a href="/contact/companyrecord/id/<?php echo $note['id_company']?>">
+                                    		<?php echo $note['company']?>
+                                    	</a>
+                                	<?php elseif(isset($note["case"]) && $note["case"]):?>
+                                		<a href="/project/record/id/<?php echo $note['id_case']?>">
+                                			<?php echo $note['case']?>
+                                		</a>
+                                    <?php elseif(isset($note["company"]) && $note["company"]):?>
+                                    	<a href="/contact/companyrecord/id/<?php echo $note['id_company']?>">
+                                    		<?php echo $note['company']?>
+                                    	</a>
+                                    <?php endif;?>
+                                     <span class="timestamp">
+                                    	<a href="/index/comment/id/<?php echo $note['id']?>">
+                                    		<img src="/images/icons/comment.png"/>
+                                    	</a>
+                                    	<?php if($this->profile->admin == 1 || $this->profile->id == $note['author']):?>
+	                                    	<a class="fancybox" href="/index/editfancynote/id/<?php echo $note['id']?>"><img class="" src="/images/icons/pencil.png"/></a>
+	                                    	<img id="<?php echo $note['id']?>" class="delete_note" src="/images/icons/delete.png"/><br/>
+                                     	<?php endif; ?>
+                                     </span>
+                                    <br />
+                                    <span class="timestamp_left">
+                                    	<?php echo $note['cdate']?><br/>
+                                    </span>
+                                    <div class="entry-meta">
+                                      <?php echo $note['profile']?>
+                                    </div>
+                                    <p><?php echo $note['note']?></p>
+                                     <div class="file-meta">
+                                        <?php if($note['files']):?>
+                                        	<?php foreach ($note['files'] as $file):?>
+                                        		<?php if($file['type'] == 1):?>
+                                        			<a href="<?php echo $file['file']; ?>"><img width="50" height="50" src="<?php echo $file['file']; ?>"/></a>
+                                        		<?php elseif ($file['type'] == 2):?>
+                                        			<a href="<?php echo $file['file']; ?>"><img src="/images/docIcons/pdf.png"/></a>
+                                        		<?php elseif ($file['type'] == 3):?>
+                                        			<a href="<?php echo $file['file']; ?>"><img src="/images/docIcons/xls.png"/></a>
+                                        		<?php elseif ($file['type'] == 4):?>
+                                        			<a href="<?php echo $file['file']; ?>"><img src="/images/docIcons/doc.png"/></a>
+                                        		<?php elseif ($file['type'] == 5):?>
+                                        			<a href="<?php echo $file['file']; ?>"><img src="/images/docIcons/ppt.png"/></a>
+                                        		<?php else:?>
+                                        			<a href="<?php echo $file['file']; ?>"><img src="/images/icons/page.png"/></a>
+                                        		<?php endif;?>
+                                        	<?php endforeach;?>
+                                        <?php endif;?>
+                                    </div>
+                                </li>
+                             <?php endforeach;?>
+                            </ul>
+                            <div class="gimmimoar">
+                            	<?php echo $this->translate('Show older'); ?>
+                            </div>
+                        </section>
+                    </div>
+
+                </section>
+                
+                   <!-- Main Section End -->
+                <section class="grid_1">
+                <h3><?php echo $this->translate('Your tasks'); ?></h3>
+                <table style="width: 100%">
+                <?php if($this->tasks):?>
+                	<?php foreach($this->tasks as $task):?>
+                		<tr>
+	                		<td><input class="checkTask" type="checkbox" name="" id="<?php echo $task['id'] ?>"/></td>
+							<td style="padding: 2px 5px;"> <?php	echo $task ['name']; ?></td>
+						</tr>
+                	<?php endforeach;?>
+                <?php endif;?>
+                </table>
+                </section>
+<script type="text/javascript">
+$(function(){
+	var data = new Object();
+	data.count = <?php echo count($this->data);?>;
+	data.location = 'index';
+	
+	$('.gimmimoar').mouseover(
+		function(){
+			addNotes(data);
+		}
+	);
+
+	$(window).scroll(function() {   
+		   if($(window).scrollTop() + $(window).height() > $(document).height() - 100) {
+			   addNotes(data);
+		   }
+	});
+});
+
+
+</script>
+             

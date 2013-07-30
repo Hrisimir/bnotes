@@ -1,0 +1,64 @@
+
+<!-- Main Section -->
+
+                <section class="main-section grid_7">
+
+                    <div class="main-content">
+<header>
+<ul class="action-buttons clearfix fr">
+</ul>
+<div class="view-switcher">
+<h2><?php echo $this->translate('All Tasks'); ?></h2>
+</div>
+</header>
+
+<?php
+if ($this->tasks) :
+	?>
+	
+	<section>
+		<table class="   ">
+			<thead>
+				<tr>
+					<th style="width: 20px"></th>
+					<th></th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>
+			<?php
+			foreach ( $this->tasks as $task ) :
+			?>
+				<tr class="">
+					<td><input class="checkTask" type="checkbox" name="" id="<?php echo $task['id'] ?>"/></td>
+					<td style="background-color: #ddd" ><?php	echo $task ['category']; ?></td>
+					<td style="padding: 2px 5px;"> <?php	echo $task ['name']; ?> </td>
+				</tr>
+			<?php
+			endforeach
+			;
+			?>
+			</tbody>
+		</table>
+</section>
+	
+
+
+<?php  else :
+	?>
+<div class="" style="padding: 5px;">
+	<div class="message info">
+	<h3><?php
+		Echo $this->translate ( 'No Tasks' );
+		?></h3>
+	<p><?php
+		Echo $this->translate ( 'There are no current tasks' );
+		?></p>
+	</div>
+</div>
+
+
+<?php endif;
+?>
+</div>
+</section>

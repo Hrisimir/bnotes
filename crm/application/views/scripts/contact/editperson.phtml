@@ -1,0 +1,158 @@
+<!-- Main Section -->
+
+<section class="main-section grid_7">
+	<div class="main-content">
+		<header>
+			<ul class="action-buttons clearfix fr">
+				<li>
+					<a href="/" class="button button-gray no-text help" rel="#overlay">
+						<span class="help"></span>
+					</a>
+				</li>
+			</ul>
+			<div class="view-switcher">
+			<h2><?php echo $this->translate('Contact')?></h2>
+			</div>
+		</header>
+		<section>
+		<section class="container_4 clearfix">
+			<?php if($this->msg) : ?>
+				<div class="message success">
+					<?= $this->translate($this->msg); ?>
+				</div>
+			<?php endif;?>
+			<?php if($this->error) : ?>
+				<div class="message error">
+					<?= $this->translate($this->error); ?>
+				</div>
+			<?php endif;?>
+			<form action="/contact/editperson" class="form" method="post">
+				<div><?= $this->form->id; ?></div>
+				<div><?= $this->form->firstname; ?></div>
+				<div><?= $this->form->lastname; ?></div>
+				<div><?= $this->form->title; ?></div>
+				<div><?= $this->form->company; ?></div>
+				<div><?= $this->form->phone1; ?><img class="addTelefon add" src="/images/icons/add.png" alt="<?php echo $this->translate('Add phone')?>"/></div>
+				<?php if(is_array($this->phones)):?>
+					<?php foreach ($this->phones as $phone):?>
+					<div><label class="form-label optional"><?php echo $this->translate('Phone'); ?></label><div class="form-div"><input type="text" name="phone[]" value="<?php echo $phone["phone"]; ?>" /></div><img class="removeTelefon add" src="/images/icons/delete.png" alt="<?php echo $this->translate('Remove phone')?>"/></div>
+					<?php endforeach;?>
+				<?php endif; ?>
+				<div><?= $this->form->email; ?><img class="addEmail add" src="/images/icons/add.png" alt="<?php echo $this->translate('Add email')?>"/></div>
+				<?php if(is_array($this->emails)):?>	
+					<?php foreach ($this->emails as $phone):?>
+					<div><label class="form-label optional"><?php echo $this->translate('E-mail'); ?></label><div class="form-div"><input type="text" name="email1[]" value="<?php echo $phone["name"]; ?>" /></div><img class="removeEmail add" src="/images/icons/delete.png" alt="<?php echo $this->translate('Remove email')?>"/></div>	
+					<?php endforeach;?>
+				<?php endif; ?>
+				<div><?= $this->form->website; ?><img class="addWebsite add" src="/images/icons/add.png" alt="<?php echo $this->translate('Add website')?>"/></div>
+				<?php if(is_array($this->websites)):?>	
+					<?php foreach ($this->websites as $phone):?>
+					<div><label class="form-label optional"><?php echo $this->translate('Website'); ?></label><div class="form-div"><input type="text" name="website1[]" value="<?php echo $phone["name"]; ?>" /></div><img class="removeWebsite add" src="/images/icons/delete.png" alt="<?php echo $this->translate('Remove website')?>"/></div>
+					<?php endforeach;?>
+				<?php endif; ?>
+				<div class="textarea" ><?= $this->form->address; ?><img class="addAddress add" src="/images/icons/add.png" alt="<?php echo $this->translate('Add address')?>"/></div>
+				<?php if(is_array($this->addresses)):?>	
+					<?php foreach ($this->addresses as $phone):?>
+					<div class="textarea" ><label class="form-label optional"><?php echo $this->translate('Address'); ?></label><div class="form-div"><textarea rows="24" cols="80" name="address1[]" ><?php echo $phone['address']; ?></textarea></div><img class="removeAddress add" src="/images/icons/delete.png" alt="<?php echo $this->translate('Remove address')?>"/></div>
+					<?php endforeach;?>
+				<?php endif; ?>
+				<br />
+				<div class="custom-fields">
+					<b><?php echo $this->translate('Custom fields'); ?></b>
+					<a style="float:right"   href="/contact/customfields" ><?php echo $this->translate('Set up custom fields'); ?></a>
+					<hr>
+					<?php if($this->fields):?>
+						<?php foreach($this->fields as $field):?>
+							<div><?= $this->form->$field['name']; ?></div>
+						<?php endforeach;?>
+					<?php endif;?>
+				</div>
+				<br /><br />
+				<label>&nbsp;</label><?= $this->form->save ?>
+			</form>
+		</section>
+	</div>
+</section>
+<style>
+	.form > div{height: 52px;}
+	img.add{padding: 6px; cursor: pointer;}
+	.form > div.textarea{height: 132px;}
+</style>
+<script>
+
+	$('img.addTelefon').click(
+		function(){
+			var div = $('<div><label class="form-label optional"><?php echo $this->translate('Phone'); ?></label><div class="form-div"><input type="text" name="phone[]" /></div><img class="removeTelefon add" src="/images/icons/delete.png" alt="<?php echo $this->translate('Remove phone')?>"/></div>');
+			$(this).parent().after(div);
+			$('img.removeTelefon').click(
+					function(){
+						$(this).parent().remove();
+					}
+			);
+		}
+	);
+
+	$('img.removeTelefon').click(
+			function(){
+				$(this).parent().remove();
+			}
+	);
+
+	$('img.addEmail').click(
+			function(){
+				var div = $('<div><label class="form-label optional"><?php echo $this->translate('E-mail'); ?></label><div class="form-div"><input type="text" name="email1[]" /></div><img class="removeEmail add" src="/images/icons/delete.png" alt="<?php echo $this->translate('Remove email')?>"/></div>');
+				$(this).parent().after(div);
+				$('img.removeEmail').click(
+						function(){
+							$(this).parent().remove();
+						}
+				);
+			}
+		);
+
+	$('img.removeEmail').click(
+			function(){
+				$(this).parent().remove();
+			}
+	);
+	
+	$('img.addWebsite').click(
+			function(){
+				var div = $('<div><label class="form-label optional"><?php echo $this->translate('Website'); ?></label><div class="form-div"><input type="text" name="website1[]" /></div><img class="removeWebsite add" src="/images/icons/delete.png" alt="<?php echo $this->translate('Remove website')?>"/></div>');
+				$(this).parent().after(div);
+				$('img.removeWebsite').click(
+						function(){
+							$(this).parent().remove();
+						}
+				);
+			}
+		);
+
+	$('img.removeWebsite').click(
+			function(){
+				$(this).parent().remove();
+			}
+	);
+	
+	$('img.addAddress').click(
+			function(){
+				var div = $('<div class="textarea" ><label class="form-label optional"><?php echo $this->translate('Address'); ?></label><div class="form-div"><textarea rows="24" cols="80" name="address1[]" /></textarea></div><img class="removeAddress add" src="/images/icons/delete.png" alt="<?php echo $this->translate('Remove address')?>"/></div>');
+				$(this).parent().after(div);
+				$('img.removeAddress').click(
+						function(){
+							$(this).parent().remove();
+						}
+				);
+			}
+		);
+
+	$('img.removeAddress').click(
+			function(){
+				$(this).parent().remove();
+			}
+	);
+	
+</script>
+
+
+

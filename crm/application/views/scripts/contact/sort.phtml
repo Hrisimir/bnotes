@@ -1,0 +1,118 @@
+<!-- Main Section -->
+
+                <section class="main-section grid_7">
+
+                    <div class="main-content grid_5 alpha">
+<header>
+<ul class="action-buttons clearfix fr">
+</ul>
+<div class="view-switcher">
+<h2><?php echo $this->translate('Contacts'); ?></h2>
+</div>
+</header>
+
+	<?php if($this->msg) : ?>
+	<div style="padding: 5px;">
+		<div class="message success">
+			<?= $this->translate($this->msg); ?>
+		</div>
+	</div>
+	<?php endif;?>
+	<?php if($this->error) : ?>
+	<div style="padding: 5px;">
+		<div class="message error">
+			<?= $this->translate($this->error); ?>
+		</div>
+	</div>
+	<?php endif;?>
+
+<?php
+if ($this->allcontacts) :
+	?>
+	                       <section>
+	                        <ul id="contacts" class="listing list-view clearfix">
+                        	<?php
+							foreach ( $this->allcontacts as $task ) :
+								?>
+                           
+                              
+                              <?php if($task["type"]): ?>  
+                                	<li class="contact clearfix">
+                                    <div class="avatar"><img src="/images/user_32.png" /></div>
+                                    <a href="/contact/personrecord/id/<?php echo $task['id']?>" class="name"><?php echo $task ['name']; ?></a>
+                                    <div class="entry-meta">
+                                        <a href="/contact/editperson/id/<?= $task['id']?>"><img src="/images/icons/pencil.png" /></a>
+					    				<a href="/contact/deleteperson/id/<?= $task['id']?>"><img src="/images/icons/delete.png" /></a>
+                                    </div>
+                              <?php else :?>
+                             	 <li class="company clearfix">
+                              		<div class="avatar"><img src="/images/users_business_32.png" /></div>
+                                    <a href="/contact/companyrecord/id/<?php echo $task['id']?>" class="name"><?php echo $task ['name']; ?></a>
+                                    <div class="entry-meta">
+                                        <a href="/contact/editcompany/id/<?= $task['id']?>"><img src="/images/icons/pencil.png" /></a>
+					    				<a href="/contact/deletecompany/id/<?= $task['id']?>"><img src="/images/icons/delete.png" /></a>
+                                    </div>
+                              
+                              <?php endif;?>
+                                </li>
+                              
+                              <?php endforeach;?>
+                                </ul>
+                                <div class="gimmimoar">
+	                            	<?php echo $this->translate('More'); ?>
+	                            </div>
+							</div>
+							 <div class="preview-pane grid_1 omega">
+		                        <div class="content">
+		                        <h3><?php echo $this->translate('Easy in easy out');?></h3>
+		                        <hr>
+			                    <a href="/contact/import/" class=""><b><?php echo $this->translate('Import');?></b></a>
+	                            <?php echo $this->translate('or');?>
+	                            <a href="/contact/export/" class=""><b><?php echo $this->translate('Export');?></b></a>
+	                           	<?php echo $this->translate(' your contacts.');?>
+	                           	<ul class="profile-info">
+	                           	</ul>
+			                    </div>
+		               		</div>
+                </section>
+                <!-- Main Section End -->
+                
+<script type="text/javascript">
+/*$(function(){
+	var data = new Object();
+	data.count = 6;
+	
+		$('.gimmimoar').mouseover(
+			function(){
+				data =  addContacts(data);
+			}
+		);
+	
+		$(window).scroll(function() {   
+			   if($(window).scrollTop() + $(window).height() > $(document).height() - 10) {
+				 data =  addContacts(data);
+			   }
+		});
+});*/
+
+
+</script>
+<?php  else :
+	?>
+<div class="" style="padding: 5px;">
+<div class="message info">
+<h3><?php
+	Echo $this->translate ( 'No Contacts' );
+	?></h3>
+<p><?php
+	Echo $this->translate ( 'There are no contacts' );
+	?></p>
+</div>
+</div>
+
+</section>
+<?php endif;
+?>
+
+
+                      
