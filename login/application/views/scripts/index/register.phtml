@@ -1,0 +1,35 @@
+<div style="width:250px; height:300px; margin: 0 auto; padding-top: 100px;">
+	<div class="container_4 clearfix">
+		<!-- Main Section -->
+		<section class="main-section grid_4" style="height:auto;">
+	
+			<div class="main-content" style="min-height:0;">
+				<header>
+					<h2><?php echo $this->translate('CRM Register page'); ?></h2>
+				</header>
+				<section class="container_4 clearfix">
+				<?php if($this->msg) : ?>
+				<div class="message error">
+					<?= $this->translate($this->msg); ?>
+				</div>
+				<?php endif;?>
+				<form action="" method="post">
+				<?= $this->form->firstname ?>
+				<?= $this->form->lastname ?>
+				<?= $this->form->companyname ?>
+				<?= $this->form->company ?>
+				<?= $this->form->username ?>
+				<?= $this->form->password ?>
+				<?= $this->form->password2 ?>
+				<a href="/"><?php echo $this->translate('Back');?></a>
+				<?= $this->form->login ?>
+				
+				</form>
+				<div class="clear"></div>
+				</section>
+			</div>
+		</section>
+		<!-- Main Section End -->
+	</div>
+	<div id="push"></div>
+</div>

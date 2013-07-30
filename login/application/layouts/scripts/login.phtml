@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" dir="ltr" lang="bg-BG">
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Contact Management</title>
+
+<link rel="stylesheet" type="text/css" href="<?php echo $this->baseUrl('css/reset.css');?>" />
+<link rel="stylesheet" type="text/css" href="<?php echo $this->baseUrl('css/grid.css');?>" />
+<link rel="stylesheet" type="text/css" href="<?php echo $this->baseUrl('css/style.css');?>" />
+<link rel="stylesheet" type="text/css" href="<?php echo $this->baseUrl('css/messages.css');?>" />
+<link rel="stylesheet" type="text/css" href="<?php echo $this->baseUrl('css/forms.css');?>" />
+<!--[if lt IE 8]>
+<link rel="stylesheet" media="screen" href="<?php echo $this->baseUrl('css/ie.css');?>'" />
+<![endif]-->
+
+<!-- jquerytools -->
+<script type="text/javascript" src="<?php echo $this->baseUrl('js/jquery.tools.min.js'); ?>"></script>
+<script type="text/javascript" src="<?php echo $this->baseUrl('js/global.js'); ?>"></script>
+<script type="text/javascript" src="<?php echo $this->baseUrl('js/jquery.cookie.js'); ?>"></script>
+
+<!--[if lt IE 9]>
+<script type="text/javascript" src="<?php echo $this->baseUrl('js/html5.js'); ?>"></script>
+<script type="text/javascript" src="<?php echo $this->baseUrl('js/PIE.js'); ?>"></script>
+<script type="text/javascript" src="<?php echo $this->baseUrl('js/IE9.js'); ?>"></script>
+<script type="text/javascript" src="<?php echo $this->baseUrl('js/ie.js'); ?>"></script>
+<![endif]-->
+
+</head>
+<body>
+	<div id="languageChooser">
+		<a href="#" onclick="$.cookie('lang', 'bg', { path: '/', domain:'<?php echo $this->domain;?>' }); location.reload();"><img src="<?php echo $this->baseUrl();?>/images/flags/BG.png" /></a>
+		<a href="#" onclick="$.cookie('lang', 'en', { path: '/',  domain:'<?php echo $this->domain;?>'}); location.reload();"><img src="<?php echo $this->baseUrl();?>/images/flags/UK.png" /></a>
+	</div>
+    <div id="wrapper">
+     	<?php echo $this->layout()->content ?>
+    </div>
+    
+    <footer>
+        <div id="footer-inner" class="container_8 clearfix">
+            <div class="grid_8">
+                <span class="fr"><a href="#">Documentation</a> | <a href="#">Feedback</a></span>Last account activity from 127.0.0.1 - <a href="#">Details</a> | &copy; 2013. All wrongs observed.
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
+
+
