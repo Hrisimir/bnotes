@@ -110,10 +110,13 @@ CREATE TABLE `company` (
   `email` varchar(100) DEFAULT NULL,
   `address` varchar(255) DEFAULT NULL,
   `website` varchar(100) DEFAULT NULL,
+  `col1` varchar(255) DEFAULT NULL,
+  `col2` varchar(255) DEFAULT NULL,
+  `col3` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `profile_idx` (`author`),
   CONSTRAINT `fk_company_profile` FOREIGN KEY (`author`) REFERENCES `profile` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -122,7 +125,7 @@ CREATE TABLE `company` (
 
 LOCK TABLES `company` WRITE;
 /*!40000 ALTER TABLE `company` DISABLE KEYS */;
-INSERT INTO `company` VALUES (1,'ВАЙД-БУЛ ЕООД','121222112',1,0,'0898933111','sofia@weidbul.com','бул. Св. Кл. Охридски 13, София','www.weidbul.com'),(2,'ЛИМОНЧЕЛО ООД','1212614455',1,0,'02 99443 455','limonchelo@limonchelo.bg','ул. паприка 45, София','lionchelo.bg');
+INSERT INTO `company` VALUES (1,'ВАЙД-БУЛ ЕООД','121222112',1,0,'0898933111','sofia@weidbul.com','бул. Св. Кл. Охридски 13, София','www.weidbul.com',NULL,NULL,NULL),(2,'ЛИМОНЧЕЛО ООД','1212614455',1,0,'02 99443 455','limonchelo@limonchelo.bg','ул. паприка 45, София','lionchelo.bg',NULL,NULL,NULL),(4,'ПРИСТАHИЩЕ ЕАД БУРГАС',NULL,1,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(5,'КОМОС ООД',NULL,1,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(6,'ИТД ЕООД',NULL,1,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(7,'ЕЛХИМ ИСKРА АД',NULL,1,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(8,'ЕХНАТОН ООД',NULL,1,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
 /*!40000 ALTER TABLE `company` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -276,7 +279,7 @@ CREATE TABLE `file` (
   `file` text NOT NULL,
   `type` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=45 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=46 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -285,7 +288,7 @@ CREATE TABLE `file` (
 
 LOCK TABLES `file` WRITE;
 /*!40000 ALTER TABLE `file` DISABLE KEYS */;
-INSERT INTO `file` VALUES (1,4,'/images/Developik/files/4/b7372724120f7e6877ec6bc1e6961564.ation/pdf',0),(2,23,'/images/Developik/files/23/4a47a0db6e60853dedfcfdf08a5ca249.png',0),(3,25,'/images/Developik/files/25/6f5876103306b5a663b2ffdd17b6c3b3.gif',0),(4,51,'/notes/Developik/files/51/51bde6a0562c82c063f1ee934e1ae9a7.jpeg',0),(5,52,'/notes/Developik/files/52/IMAG0221.jpg',0),(6,53,'/notes/Developik/files/53/IMAG0222.jpg',0),(7,54,'/notes/Developik/files/54/IMAG0221.jpg',0),(8,55,'/notes/Developik/files/55/IMAG0226.jpg',0),(9,56,'/notes/Developik/files/56/IMAG0221.jpg',0),(10,57,'/images/Developik/files/57/51bde6a0562c82c063f1ee934e1ae9a7.jpeg',0),(11,58,'/notes/Developik/files/58/IMAG0221.jpg',0),(12,59,'/notes/Developik/files/59/IMAG0221.jpg',0),(13,59,'/notes/Developik/files/59/IMAG0222.jpg',0),(14,62,'/notes/Developik/files/62/1.png',0),(15,63,'/notes/Developik/files/63/1.png',0),(16,68,'/notes/Developik/files/68/IMAG0221.jpg',0),(17,70,'/notes/Developik/files/70/IMAG0221.jpg',0),(18,76,'/notes/Developik/files/76/IMAG0223.jpg',0),(19,76,'/notes/Developik/files/76/IMAG0223.jpg',0),(20,76,'/notes/Developik/files/76/IMAG0223.jpg',1),(21,84,'/notes/Developik/files/84/IMG_20130525_163718.jpg',0),(22,85,'/notes/Developik/files/85/IMG_20130525_163718.jpg',0),(23,86,'/notes/Developik/files/86/IMAG0221.jpg',1),(24,87,'/notes/Developik/files/87/IMAG0221.jpg',1),(25,88,'/notes/Developik/files/88/IMAG0221.jpg',1),(26,88,'/notes/Developik/files/88/IMAG0221.jpg',1),(27,89,'/notes/Developik/files/89/IMG_20130525_163718.jpg',0),(28,89,'/notes/Developik/files/89/IMAG0221.jpg',1),(29,89,'/notes/Developik/files/89/IMG_20130525_163718.jpg',0),(30,92,'/notes/Developik/files/92/IMG_20130525_163718.jpg',0),(31,93,'/notes/Developik/files/93/IMG_20130525_163718.jpg',1),(32,94,'/notes/Developik/files/94/123.png',1),(33,95,'/notes/Developik/files/95/OF_KOMOS_AEC.pdf',0),(34,96,'/notes/Developik/files/96/OF_KOMOS_AEC.pdf',0),(35,95,'/notes/Developik/files/95/Boris3.jpg',1),(36,97,'/notes/Developik/files/97/5.png',1),(37,97,'/notes/Developik/files/97/4.png',1),(38,97,'/notes/Developik/files/97/1.png',1),(39,96,'/notes/Developik/files/96/Murite.pdf',2),(40,96,'/notes/Developik/files/96/contacts.xls',3),(41,96,'/notes/Developik/files/96/ьо-или-йо  .ppt',5),(42,96,'/notes/Developik/files/96/ьо-или-йо  .ppt',5),(43,96,'/notes/Developik/files/96/ьо-или-йо  .ppt',5),(44,96,'/notes/Developik/files/96/programa Nosht muzei 2012.doc',4);
+INSERT INTO `file` VALUES (1,4,'/images/Developik/files/4/b7372724120f7e6877ec6bc1e6961564.ation/pdf',0),(2,23,'/images/Developik/files/23/4a47a0db6e60853dedfcfdf08a5ca249.png',0),(3,25,'/images/Developik/files/25/6f5876103306b5a663b2ffdd17b6c3b3.gif',0),(4,51,'/notes/Developik/files/51/51bde6a0562c82c063f1ee934e1ae9a7.jpeg',0),(5,52,'/notes/Developik/files/52/IMAG0221.jpg',0),(6,53,'/notes/Developik/files/53/IMAG0222.jpg',0),(7,54,'/notes/Developik/files/54/IMAG0221.jpg',0),(8,55,'/notes/Developik/files/55/IMAG0226.jpg',0),(9,56,'/notes/Developik/files/56/IMAG0221.jpg',0),(10,57,'/images/Developik/files/57/51bde6a0562c82c063f1ee934e1ae9a7.jpeg',0),(11,58,'/notes/Developik/files/58/IMAG0221.jpg',0),(12,59,'/notes/Developik/files/59/IMAG0221.jpg',0),(13,59,'/notes/Developik/files/59/IMAG0222.jpg',0),(14,62,'/notes/Developik/files/62/1.png',0),(15,63,'/notes/Developik/files/63/1.png',0),(16,68,'/notes/Developik/files/68/IMAG0221.jpg',0),(17,70,'/notes/Developik/files/70/IMAG0221.jpg',0),(18,76,'/notes/Developik/files/76/IMAG0223.jpg',0),(19,76,'/notes/Developik/files/76/IMAG0223.jpg',0),(20,76,'/notes/Developik/files/76/IMAG0223.jpg',1),(21,84,'/notes/Developik/files/84/IMG_20130525_163718.jpg',0),(22,85,'/notes/Developik/files/85/IMG_20130525_163718.jpg',0),(23,86,'/notes/Developik/files/86/IMAG0221.jpg',1),(24,87,'/notes/Developik/files/87/IMAG0221.jpg',1),(25,88,'/notes/Developik/files/88/IMAG0221.jpg',1),(26,88,'/notes/Developik/files/88/IMAG0221.jpg',1),(27,89,'/notes/Developik/files/89/IMG_20130525_163718.jpg',0),(28,89,'/notes/Developik/files/89/IMAG0221.jpg',1),(29,89,'/notes/Developik/files/89/IMG_20130525_163718.jpg',0),(30,92,'/notes/Developik/files/92/IMG_20130525_163718.jpg',0),(31,93,'/notes/Developik/files/93/IMG_20130525_163718.jpg',1),(32,94,'/notes/Developik/files/94/123.png',1),(33,95,'/notes/Developik/files/95/OF_KOMOS_AEC.pdf',0),(34,96,'/notes/Developik/files/96/OF_KOMOS_AEC.pdf',0),(35,95,'/notes/Developik/files/95/Boris3.jpg',1),(36,97,'/notes/Developik/files/97/5.png',1),(37,97,'/notes/Developik/files/97/4.png',1),(38,97,'/notes/Developik/files/97/1.png',1),(39,96,'/notes/Developik/files/96/Murite.pdf',2),(40,96,'/notes/Developik/files/96/contacts.xls',3),(41,96,'/notes/Developik/files/96/ьо-или-йо  .ppt',5),(42,96,'/notes/Developik/files/96/ьо-или-йо  .ppt',5),(43,96,'/notes/Developik/files/96/ьо-или-йо  .ppt',5),(44,96,'/notes/Developik/files/96/programa Nosht muzei 2012.doc',4),(45,96,'/notes/Developik/files/96/Boris3.jpg',1);
 /*!40000 ALTER TABLE `file` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -351,7 +354,7 @@ CREATE TABLE `nmcl_customtag` (
   `label` varchar(255) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `name_UNIQUE` (`name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -360,6 +363,7 @@ CREATE TABLE `nmcl_customtag` (
 
 LOCK TABLES `nmcl_customtag` WRITE;
 /*!40000 ALTER TABLE `nmcl_customtag` DISABLE KEYS */;
+INSERT INTO `nmcl_customtag` VALUES (1,'col1','Tekst'),(2,'col2','Info'),(3,'col3','proba');
 /*!40000 ALTER TABLE `nmcl_customtag` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -488,7 +492,7 @@ CREATE TABLE `note` (
   KEY `case_idx` (`id_case`),
   KEY `profile_idx` (`author`),
   CONSTRAINT `fk_company_note_profile` FOREIGN KEY (`author`) REFERENCES `profile` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=98 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=100 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -497,7 +501,7 @@ CREATE TABLE `note` (
 
 LOCK TABLES `note` WRITE;
 /*!40000 ALTER TABLE `note` DISABLE KEYS */;
-INSERT INTO `note` VALUES (1,0,NULL,1,NULL,'Направих среща с Фирма Вайд-Бул.',2,'2013-05-21 15:56:42',NULL,0,NULL),(2,0,NULL,1,NULL,'проба 1',2,'2013-05-21 15:56:59',NULL,0,NULL),(3,2,NULL,1,NULL,'комент на проба',1,'2013-05-21 15:58:00',NULL,0,NULL),(4,2,NULL,1,NULL,'аа',1,'2013-05-21 15:59:02',NULL,0,NULL),(5,0,1,1,NULL,'маринела контакт',1,'2013-05-21 16:05:33',NULL,0,NULL),(7,0,1,1,NULL,'Test Marinela Pavlevska 1 2 1',2,'2013-05-29 14:31:28',NULL,0,NULL),(8,0,1,1,NULL,'Тест\r\n',2,'2013-05-29 16:18:34',NULL,0,NULL),(9,0,1,1,NULL,'test',2,'2013-05-29 16:47:49',NULL,0,NULL),(10,0,1,1,NULL,'test',2,'2013-05-29 16:47:51',NULL,0,NULL),(11,0,1,1,NULL,'test',2,'2013-05-29 16:47:52',NULL,0,NULL),(12,0,1,1,NULL,'test',2,'2013-05-29 16:48:04',NULL,0,NULL),(13,0,1,1,NULL,'test 1',2,'2013-05-29 16:48:05',NULL,0,NULL),(14,0,1,1,NULL,'test',1,'2013-05-29 16:48:07',NULL,0,NULL),(15,0,1,1,NULL,'test1',1,'2013-05-29 16:48:08',NULL,0,NULL),(16,0,NULL,1,NULL,'Пейков се обади, попита дали предлагаме проводници (1.5, 2.5 и 4 mm2) и гилзи... Иска и маркировки. Щели да правят демонстративно табло, после можело да има фронт за 10 табла. Попита за апаратура, казах му да не ходи в SCHRACK, защото цените ни са същите (ще предупредя Краси Червенков). За контактори, моторни защити и др. иска отделна оферта. За клемите е ясно - фен бил на WMI и т.н. :) За 4 mm2 ще иска и вариант с хубави клеми, т.е. WDU. Спомена, че в Канада маркирали с етикетчета и го насочих към BRADY. Чакам запитване и ще му изпратя оферти.\n',1,'2013-05-30 07:13:11',NULL,0,NULL),(17,16,NULL,1,NULL,'dobre',2,'2013-05-30 07:14:01',NULL,0,NULL),(18,0,1,1,NULL,'Издаден Задел 3197 за PZ 3, съгласно вчерашния разговор с Пейков (тъй като е почитател). Когато събере парите, ще дойде да го вземе.\n',1,'2013-05-30 07:47:50',NULL,0,NULL),(19,0,1,1,NULL,'hi131',2,'2013-05-30 10:40:53',NULL,0,NULL),(20,19,1,1,NULL,'test122',2,'2013-05-30 11:50:46',NULL,0,NULL),(23,19,1,1,NULL,'ццц',1,'2013-05-31 08:03:25',NULL,0,NULL),(24,0,2,1,NULL,'Енергоремонт холдинг, която е една от водещитге български компании в областта на проектирането и строителството в енергетиката обяви, че планира нова пазарна стратегия, както и промяна на името си. Новото наименование на дружеството ще бъде ЕР Холдинг, което отразява разширения спектър от дейности, които компанията извършва през последната година. Очаква се това да стане факт в рамките на следващите два месеца, през които е предвидено общо събрание на акционерите. Пазарната стратегия на дружеството, което е реализирало различни дейности по монтиране и строителство на енергетично оборудване в най-големите тецове, вецове',1,'2013-05-31 11:12:07',NULL,0,NULL),(25,24,2,1,NULL,'Da be',2,'2013-05-31 11:13:17',NULL,0,NULL),(26,0,3,2,NULL,'изпращам офертата за маркировките. От размерът РО-04 съм предложил 390м вместо 400 м, тъй като имаме на склад 190 м, които може да вземете. От лентата МК9-RB също имаме 5 бр. на склад. Останалото количество по офертата можем да доставим до 14.06. при поръчка до 04.06.2013.\n\n--\n\nС уважение, инж. Пламен Стоянов',1,'2013-06-01 06:38:26',NULL,0,NULL),(50,0,3,2,2,'Test 4321',2,'2013-06-02 09:34:45','2013-06-02',2,1),(51,0,3,2,2,'Test 4321',2,'2013-06-02 09:35:01','2013-06-02',2,1),(52,0,3,2,2,'Test 54321',2,'2013-06-02 09:37:46','2013-06-02',2,1),(53,0,NULL,2,2,'Test Company Note',2,'2013-06-02 09:45:57','2013-06-02',2,1),(54,0,NULL,2,2,'Test Company Note 2',2,'2013-06-02 09:48:01','2013-06-02',2,1),(55,0,NULL,2,2,'Test 3 ompany Note',2,'2013-06-02 09:48:43','2013-06-02',2,1),(56,0,NULL,0,2,'Test Case Note',2,'2013-06-02 09:55:23','2013-06-02',0,NULL),(57,56,NULL,0,2,'Test Comment',2,'2013-06-02 10:03:06',NULL,0,NULL),(58,56,NULL,0,2,'Test Comment',2,'2013-06-02 10:04:09',NULL,0,NULL),(59,56,NULL,0,2,'test 221',2,'2013-06-02 10:04:36',NULL,0,NULL),(60,53,NULL,2,2,'test Group comment',2,'2013-06-02 10:59:43',NULL,2,1),(61,0,3,2,NULL,'тест',2,'2013-06-02 11:33:17',NULL,0,NULL),(62,0,NULL,1,2,'Купи малко маркировки, носачи и кабелни връзки. Продължава да търси зегершайба за PZ 6 Roto. Ще се опитаме да намерим някоя от стари повредени инструменти. \nИска да му се изработи оферта за принтер Брейди. Остави мейл за кореспонденция.',1,'2013-06-04 07:31:50',NULL,0,NULL),(63,0,NULL,1,2,'Купи малко маркировки, носачи и кабелни връзки. Продължава да търси зегершайба за PZ 6 Roto. Ще се опитаме да намерим някоя от стари повредени инструменти. \nИска да му се изработи оферта за принтер Брейди. Остави мейл за кореспонденция.',1,'2013-06-04 07:32:06',NULL,0,NULL),(64,0,3,2,2,'Пускам коментар тук  1',2,'2013-06-04 09:03:54',NULL,0,NULL),(65,0,NULL,2,2,'Пускам втори коментар тук ',1,'2013-06-04 09:04:36',NULL,0,NULL),(66,0,NULL,2,NULL,'Кирил Кръстев ПОРЪЧА 4 клемореда за ЕВН (061). Делчо ще подготви изшращането на стоката.\n\n',1,'2013-06-06 07:13:42',NULL,0,NULL),(67,0,NULL,2,2,'Тест',1,'2013-06-08 14:20:52',NULL,0,NULL),(68,0,3,2,2,'Тест 1 2 3456 5 6 6 7',2,'2013-06-08 14:21:26',NULL,0,NULL),(69,0,NULL,2,2,'Test точка 3. Според мен излиза и тук (В картона на Лимончело) и в картона на Маркетинг / Бизнес проекта)',2,'2013-06-09 09:43:34',NULL,0,NULL),(70,0,NULL,0,2,'1234',2,'2013-06-09 11:14:20','2013-06-09',0,NULL),(71,0,3,2,NULL,'test',2,'2013-06-09 12:33:30',NULL,0,NULL),(72,0,3,2,NULL,'test',2,'2013-06-09 12:35:04',NULL,0,NULL),(73,0,3,2,NULL,'test',2,'2013-06-09 12:36:15',NULL,0,NULL),(74,0,3,2,NULL,'',2,'2013-06-09 12:37:57',NULL,0,NULL),(75,0,3,2,NULL,'',2,'2013-06-09 12:38:09',NULL,0,NULL),(76,0,3,2,NULL,'test 123',2,'2013-06-09 12:39:17',NULL,0,NULL),(77,0,3,2,NULL,'test',2,'2013-06-09 13:04:00',NULL,0,NULL),(78,0,3,2,NULL,'test',2,'2013-06-09 13:04:02',NULL,0,NULL),(79,0,3,2,NULL,'tet',2,'2013-06-09 13:04:04',NULL,0,NULL),(80,0,3,2,NULL,'test',2,'2013-06-09 13:04:06',NULL,0,NULL),(81,0,3,2,NULL,'tett',2,'2013-06-09 13:04:12',NULL,0,NULL),(82,0,3,2,NULL,'tett',2,'2013-06-09 13:04:59',NULL,0,NULL),(83,0,3,2,NULL,'tett',2,'2013-06-09 13:05:50',NULL,0,NULL),(84,0,3,2,NULL,'tett',2,'2013-06-09 13:06:43',NULL,0,NULL),(85,0,3,2,NULL,'',2,'2013-06-09 13:14:11',NULL,0,NULL),(86,0,3,2,NULL,'test',2,'2013-06-09 13:16:37',NULL,0,NULL),(87,0,3,2,NULL,'test1',2,'2013-06-09 13:17:04',NULL,0,NULL),(88,0,3,2,NULL,'test12',2,'2013-06-09 13:17:27',NULL,0,NULL),(89,0,3,2,NULL,'Proba az sum v igrata kakvo stava',1,'2013-06-09 13:20:13',NULL,0,NULL),(90,0,3,2,NULL,'test',2,'2013-06-09 13:24:47',NULL,0,NULL),(91,0,3,2,NULL,'test 1',2,'2013-06-09 13:26:06',NULL,0,NULL),(92,0,3,2,NULL,'test 1',2,'2013-06-09 13:29:34',NULL,0,NULL),(93,0,3,2,NULL,'test 1231234',2,'2013-06-09 13:32:24',NULL,0,NULL),(94,0,4,2,NULL,'Всяка една фирма, малка или голяма, независимо с какъв оборот трябва да си има отговорен търговец и той да се грижи за тази фирма.\r\n',1,'2013-06-10 06:05:10',NULL,0,NULL),(95,0,4,2,NULL,'Редактирам бележка за Динко Жеков от 09:08:37.\r\n\r\nИзлезе само веднъж (това е 2ра редакция)',2,'2013-06-10 06:08:37',NULL,0,NULL),(96,0,4,2,NULL,'',2,'2013-06-10 06:08:47',NULL,0,NULL),(97,0,4,2,2,'Проба качване на файл. ',2,'2013-06-10 08:40:52',NULL,0,NULL);
+INSERT INTO `note` VALUES (1,0,NULL,1,NULL,'Направих среща с Фирма Вайд-Бул.',2,'2013-05-21 15:56:42',NULL,0,NULL),(2,0,NULL,1,NULL,'проба 1',2,'2013-05-21 15:56:59',NULL,0,NULL),(3,2,NULL,1,NULL,'комент на проба',1,'2013-05-21 15:58:00',NULL,0,NULL),(4,2,NULL,1,NULL,'аа',1,'2013-05-21 15:59:02',NULL,0,NULL),(5,0,1,1,NULL,'маринела контакт',1,'2013-05-21 16:05:33',NULL,0,NULL),(7,0,1,1,NULL,'Test Marinela Pavlevska 1 2 1',2,'2013-05-29 14:31:28',NULL,0,NULL),(8,0,1,1,NULL,'Тест\r\n',2,'2013-05-29 16:18:34',NULL,0,NULL),(9,0,1,1,NULL,'test',2,'2013-05-29 16:47:49',NULL,0,NULL),(10,0,1,1,NULL,'test',2,'2013-05-29 16:47:51',NULL,0,NULL),(11,0,1,1,NULL,'test',2,'2013-05-29 16:47:52',NULL,0,NULL),(12,0,1,1,NULL,'test',2,'2013-05-29 16:48:04',NULL,0,NULL),(13,0,1,1,NULL,'test 1',2,'2013-05-29 16:48:05',NULL,0,NULL),(14,0,1,1,NULL,'test',1,'2013-05-29 16:48:07',NULL,0,NULL),(15,0,1,1,NULL,'test1',1,'2013-05-29 16:48:08',NULL,0,NULL),(16,0,NULL,1,NULL,'Пейков се обади, попита дали предлагаме проводници (1.5, 2.5 и 4 mm2) и гилзи... Иска и маркировки. Щели да правят демонстративно табло, после можело да има фронт за 10 табла. Попита за апаратура, казах му да не ходи в SCHRACK, защото цените ни са същите (ще предупредя Краси Червенков). За контактори, моторни защити и др. иска отделна оферта. За клемите е ясно - фен бил на WMI и т.н. :) За 4 mm2 ще иска и вариант с хубави клеми, т.е. WDU. Спомена, че в Канада маркирали с етикетчета и го насочих към BRADY. Чакам запитване и ще му изпратя оферти.\n',1,'2013-05-30 07:13:11',NULL,0,NULL),(17,16,NULL,1,NULL,'dobre',2,'2013-05-30 07:14:01',NULL,0,NULL),(18,0,1,1,NULL,'Издаден Задел 3197 за PZ 3, съгласно вчерашния разговор с Пейков (тъй като е почитател). Когато събере парите, ще дойде да го вземе.\n',1,'2013-05-30 07:47:50',NULL,0,NULL),(19,0,1,1,NULL,'hi131',2,'2013-05-30 10:40:53',NULL,0,NULL),(20,19,1,1,NULL,'test122',2,'2013-05-30 11:50:46',NULL,0,NULL),(23,19,1,1,NULL,'ццц',1,'2013-05-31 08:03:25',NULL,0,NULL),(24,0,2,1,NULL,'Енергоремонт холдинг, която е една от водещитге български компании в областта на проектирането и строителството в енергетиката обяви, че планира нова пазарна стратегия, както и промяна на името си. Новото наименование на дружеството ще бъде ЕР Холдинг, което отразява разширения спектър от дейности, които компанията извършва през последната година. Очаква се това да стане факт в рамките на следващите два месеца, през които е предвидено общо събрание на акционерите. Пазарната стратегия на дружеството, което е реализирало различни дейности по монтиране и строителство на енергетично оборудване в най-големите тецове, вецове',1,'2013-05-31 11:12:07',NULL,0,NULL),(25,24,2,1,NULL,'Da be',2,'2013-05-31 11:13:17',NULL,0,NULL),(26,0,3,2,NULL,'изпращам офертата за маркировките. От размерът РО-04 съм предложил 390м вместо 400 м, тъй като имаме на склад 190 м, които може да вземете. От лентата МК9-RB също имаме 5 бр. на склад. Останалото количество по офертата можем да доставим до 14.06. при поръчка до 04.06.2013.\n\n--\n\nС уважение, инж. Пламен Стоянов',1,'2013-06-01 06:38:26',NULL,0,NULL),(50,0,3,2,2,'Test 4321',2,'2013-06-02 09:34:45','2013-06-02',2,1),(51,0,3,2,2,'Test 4321',2,'2013-06-02 09:35:01','2013-06-02',2,1),(52,0,3,2,2,'Test 54321',2,'2013-06-02 09:37:46','2013-06-02',2,1),(53,0,NULL,2,2,'Test Company Note',2,'2013-06-02 09:45:57','2013-06-02',2,1),(54,0,NULL,2,2,'Test Company Note 2',2,'2013-06-02 09:48:01','2013-06-02',2,1),(55,0,NULL,2,2,'Test 3 ompany Note',2,'2013-06-02 09:48:43','2013-06-02',2,1),(56,0,NULL,0,2,'Test Case Note',2,'2013-06-02 09:55:23','2013-06-02',0,NULL),(57,56,NULL,0,2,'Test Comment',2,'2013-06-02 10:03:06',NULL,0,NULL),(58,56,NULL,0,2,'Test Comment',2,'2013-06-02 10:04:09',NULL,0,NULL),(59,56,NULL,0,2,'test 221',2,'2013-06-02 10:04:36',NULL,0,NULL),(60,53,NULL,2,2,'test Group comment',2,'2013-06-02 10:59:43',NULL,2,1),(61,0,3,2,NULL,'тест',2,'2013-06-02 11:33:17',NULL,0,NULL),(62,0,NULL,1,2,'Купи малко маркировки, носачи и кабелни връзки. Продължава да търси зегершайба за PZ 6 Roto. Ще се опитаме да намерим някоя от стари повредени инструменти. \nИска да му се изработи оферта за принтер Брейди. Остави мейл за кореспонденция.',1,'2013-06-04 07:31:50',NULL,0,NULL),(63,0,NULL,1,2,'Купи малко маркировки, носачи и кабелни връзки. Продължава да търси зегершайба за PZ 6 Roto. Ще се опитаме да намерим някоя от стари повредени инструменти. \nИска да му се изработи оферта за принтер Брейди. Остави мейл за кореспонденция.',1,'2013-06-04 07:32:06',NULL,0,NULL),(64,0,3,2,2,'Пускам коментар тук  1',2,'2013-06-04 09:03:54',NULL,0,NULL),(65,0,NULL,2,2,'Пускам втори коментар тук ',1,'2013-06-04 09:04:36',NULL,0,NULL),(66,0,NULL,2,NULL,'Кирил Кръстев ПОРЪЧА 4 клемореда за ЕВН (061). Делчо ще подготви изшращането на стоката.\n\n',1,'2013-06-06 07:13:42',NULL,0,NULL),(67,0,NULL,2,2,'Тест',1,'2013-06-08 14:20:52',NULL,0,NULL),(68,0,3,2,2,'Тест 1 2 3456 5 6 6 7',2,'2013-06-08 14:21:26',NULL,0,NULL),(69,0,NULL,2,2,'Test точка 3. Според мен излиза и тук (В картона на Лимончело) и в картона на Маркетинг / Бизнес проекта)',2,'2013-06-09 09:43:34',NULL,0,NULL),(70,0,NULL,0,2,'1234',2,'2013-06-09 11:14:20','2013-06-09',0,NULL),(71,0,3,2,NULL,'test',2,'2013-06-09 12:33:30',NULL,0,NULL),(72,0,3,2,NULL,'test',2,'2013-06-09 12:35:04',NULL,0,NULL),(73,0,3,2,NULL,'test',2,'2013-06-09 12:36:15',NULL,0,NULL),(74,0,3,2,NULL,'',2,'2013-06-09 12:37:57',NULL,0,NULL),(75,0,3,2,NULL,'',2,'2013-06-09 12:38:09',NULL,0,NULL),(76,0,3,2,NULL,'test 123',2,'2013-06-09 12:39:17',NULL,0,NULL),(77,0,3,2,NULL,'test',2,'2013-06-09 13:04:00',NULL,0,NULL),(78,0,3,2,NULL,'test',2,'2013-06-09 13:04:02',NULL,0,NULL),(79,0,3,2,NULL,'tet',2,'2013-06-09 13:04:04',NULL,0,NULL),(80,0,3,2,NULL,'test',2,'2013-06-09 13:04:06',NULL,0,NULL),(81,0,3,2,NULL,'tett',2,'2013-06-09 13:04:12',NULL,0,NULL),(82,0,3,2,NULL,'tett',2,'2013-06-09 13:04:59',NULL,0,NULL),(83,0,3,2,NULL,'tett',2,'2013-06-09 13:05:50',NULL,0,NULL),(84,0,3,2,NULL,'tett',2,'2013-06-09 13:06:43',NULL,0,NULL),(85,0,3,2,NULL,'',2,'2013-06-09 13:14:11',NULL,0,NULL),(86,0,3,2,NULL,'test',2,'2013-06-09 13:16:37',NULL,0,NULL),(87,0,3,2,NULL,'test1',2,'2013-06-09 13:17:04',NULL,0,NULL),(88,0,3,2,NULL,'test12',2,'2013-06-09 13:17:27',NULL,0,NULL),(89,0,3,2,NULL,'Proba az sum v igrata kakvo stava',1,'2013-06-09 13:20:13',NULL,0,NULL),(90,0,3,2,NULL,'test',2,'2013-06-09 13:24:47',NULL,0,NULL),(91,0,3,2,NULL,'test 1',2,'2013-06-09 13:26:06',NULL,0,NULL),(92,0,3,2,NULL,'test 1',2,'2013-06-09 13:29:34',NULL,0,NULL),(93,0,3,2,NULL,'test 1231234',2,'2013-06-09 13:32:24',NULL,0,NULL),(94,0,4,2,NULL,'Всяка една фирма, малка или голяма, независимо с какъв оборот трябва да си има отговорен търговец и той да се грижи за тази фирма.\r\n',1,'2013-06-10 06:05:10',NULL,0,NULL),(95,0,4,2,NULL,'Редактирам бележка за Динко Жеков от 09:08:37.\r\n\r\nИзлезе само веднъж (това е 2ра редакция)',2,'2013-06-10 06:08:37',NULL,0,NULL),(96,0,4,2,NULL,'Има текст',2,'2013-06-10 06:08:47',NULL,0,NULL),(97,0,4,2,2,'Проба качване на файл. ',2,'2013-06-10 08:40:52',NULL,0,NULL),(98,0,NULL,6,NULL,'ggg',1,'2013-07-05 09:44:44',NULL,0,NULL),(99,96,4,2,NULL,'Коментар',2,'2013-07-23 16:38:28',NULL,0,NULL);
 /*!40000 ALTER TABLE `note` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -522,10 +526,13 @@ CREATE TABLE `person` (
   `publ` int(11) NOT NULL DEFAULT '0',
   `email` varchar(100) DEFAULT NULL,
   `website` varchar(250) DEFAULT NULL,
+  `col1` varchar(255) DEFAULT NULL,
+  `col2` varchar(255) DEFAULT NULL,
+  `col3` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `comapny_idx` (`id_company`),
   CONSTRAINT `fk_person_comapny` FOREIGN KEY (`id_company`) REFERENCES `company` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -534,7 +541,7 @@ CREATE TABLE `person` (
 
 LOCK TABLES `person` WRITE;
 /*!40000 ALTER TABLE `person` DISABLE KEYS */;
-INSERT INTO `person` VALUES (1,1,'Marinela','Pavlevska','Управител',NULL,'08989441111',NULL,'перник, улица христина морфова 6',1,0,'marinela.pavlevska@gmail.com','www.weidbul.com'),(2,1,'Красен','Попов','Продуктов Експерт',NULL,'0897 80 72 40',NULL,'ПЛОВДИВ 4003, ул. \"Васил Левски\" №99, ет. 4, ап.29',1,0,'krassen.popo@weibul.com',''),(3,2,'Петър','Ценов','Мениджър Продажби',NULL,'0811 885 392',NULL,'ул. Христина морфова 8, София, 1415',1,0,'petar.tsenov@limonchelo.bg','limon.bg'),(4,2,'Динко','Жеков','Управител',NULL,'0898933111',NULL,'София, бул. Цар Борис 55',1,0,'dinko@zhekov.com','www.zhekov.com');
+INSERT INTO `person` VALUES (1,1,'Marinela','Pavlevska','Управител',NULL,'08989441111',NULL,'перник, улица христина морфова 6',1,0,'marinela.pavlevska@gmail.com','www.weidbul.com',NULL,NULL,NULL),(2,1,'Красен','Попов','Продуктов Експерт',NULL,'0897 80 72 40',NULL,'ПЛОВДИВ 4003, ул. \"Васил Левски\" №99, ет. 4, ап.29',1,0,'krassen.popo@weibul.com','',NULL,NULL,NULL),(3,2,'Петър','Ценов','Мениджър Продажби',NULL,'0811 885 392',NULL,'ул. Христина морфова 8, София, 1415',1,0,'petar.tsenov@limonchelo.bg','limon.bg',NULL,NULL,NULL),(4,2,'Динко','Жеков','Управител',NULL,'0898933111',NULL,'София, бул. Цар Борис 55',1,0,'dinko@zhekov.com','www.zhekov.com',NULL,NULL,NULL),(6,4,'ПРИСТАHИЩЕ ЕАД БУРГАС','Company','',NULL,'',NULL,'',1,0,'','','','','');
 /*!40000 ALTER TABLE `person` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -744,7 +751,7 @@ CREATE TABLE `tag` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -753,7 +760,7 @@ CREATE TABLE `tag` (
 
 LOCK TABLES `tag` WRITE;
 /*!40000 ALTER TABLE `tag` DISABLE KEYS */;
-INSERT INTO `tag` VALUES (2,'Проба'),(5,'тест'),(6,'Търговия');
+INSERT INTO `tag` VALUES (6,'Търговия'),(8,'тест'),(9,'друг таг');
 /*!40000 ALTER TABLE `tag` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -777,7 +784,7 @@ CREATE TABLE `tag_ref` (
 
 LOCK TABLES `tag_ref` WRITE;
 /*!40000 ALTER TABLE `tag_ref` DISABLE KEYS */;
-INSERT INTO `tag_ref` VALUES (6,2,2),(6,1,2);
+INSERT INTO `tag_ref` VALUES (6,2,2),(6,1,2),(8,8,2),(9,8,2);
 /*!40000 ALTER TABLE `tag_ref` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -856,4 +863,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2013-07-02 17:21:32
+-- Dump completed on 2013-07-30 21:05:12
