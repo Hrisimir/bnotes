@@ -130,6 +130,17 @@ $(document).ready(function() {
 		}
 	);
 	
+	$('input#tag_close').click(function()
+			{	
+				$('a.tag_delete').hide();
+				$('div.add_tag').hide();
+				$('a.add_tag').show();
+				
+			}
+		);
+	
+	
+	
 	$("a.fancybox").fancybox({
 		width:480, 
 		height:480,
@@ -660,7 +671,7 @@ function addNotes(data)
 				span2.append(e.cdate);
 				if(profile.admin == 1 || profile.id == e.author)
 				{
-					span.append('<a href="/index/comment/id/'+e.id+'"><img src="/images/icons/comment.png"/></a><a class="fancybox" href="/index/editfancynote/id/'+e.id+'"> <img class="" src="/images/icons/pencil.png"/></a><img id="'+e.id+'" class="delete_note" src="/images/icons/delete.png"/><br/>');
+					span.append('<a href="/index/comment/id/'+e.id+'"><img src="/images/icons/comment.png"/></a><a class="fancybox" href="/index/editfancynote/id/'+e.id+'"> <img class="" src="/images/icons/pencil.png"/></a><a onclick="deleteNote('+e.id+')"><img id="'+e.id+'" class="delete_note" src="/images/icons/delete.png"/></a><br/>');
 				}else{
 					span.append('<a href="/index/comment/id/'+e.id+'"><img src="/images/icons/comment.png"/></a><br/>');
 				}
@@ -777,7 +788,7 @@ function addNotesC(data)
 				var curr_year = d.getFullYear();
 				
 				span2.append('<b>'+d_names[curr_day] + ",  " + m_names[curr_month] + " " + curr_date + " " + curr_year+'</b>');
-				span.append('<a href="/index/comment/id/'+e.id+'"><img src="/images/icons/comment.png"/></a><a class="fancybox" href="/index/editfancynote/id/'+e.id+'"><img class="" src="/images/icons/pencil.png"/></a> <img id="'+e.id+'" class="delete_note" src="/images/icons/delete.png"/><br/>');
+				span.append('<a href="/index/comment/id/'+e.id+'"><img src="/images/icons/comment.png"/></a><a class="fancybox" href="/index/editfancynote/id/'+e.id+'"><img class="" src="/images/icons/pencil.png"/></a> <a onclick="deleteNote('+e.id+')"><img id="'+e.id+'" class="delete_note" src="/images/icons/delete.png"/></a><br/>');
 				p.append(e.note);
 				div.append(e.profile);
 				
@@ -846,5 +857,20 @@ function addContacts(data)
 	});
 	return data;
 }
+
+function deleteNote(id)
+{	
+	$('li#'+id).remove();
+	var data = new Object();
+	data.id = id;
+	$.sajax("/index/deletenote",data,function(newdata){
+		if(newdata)
+		{
+			
+		}
+		
+	});
+}
+
 
 

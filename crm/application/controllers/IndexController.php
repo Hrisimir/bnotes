@@ -224,6 +224,19 @@ class IndexController extends Zend_Controller_Action
     	$this->view->data = $data;
     }
     
+    public function deletenoteAction()
+    {
+    	$this->_helper->layout()->disableLayout();
+    	$data = $this->getRequest()->getParams();
+    	if(isset($data['id']))
+    	{
+    		$taskModel = new Model_Activity();
+    		$this->view->data  = $taskModel->deleteNote($data['id']);
+    	}
+    }
+    
+    
+    
     public function editfancynoteAction()
     {	
     	$this->_helper->layout()->disableLayout();

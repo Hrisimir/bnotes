@@ -39,7 +39,7 @@
                                     	</a>
                                     	<?php if($this->profile->admin == 1 || $this->profile->id == $note['author']):?>
 	                                    	<a class="fancybox" href="/index/editfancynote/id/<?php echo $note['id']?>"><img class="" src="/images/icons/pencil.png"/></a>
-	                                    	<img id="<?php echo $note['id']?>" class="delete_note" src="/images/icons/delete.png"/><br/>
+	                                    	<a onclick="deleteNote(<?php echo $note['id']?>)"><img id="<?php echo $note['id']?>" class="delete_note" src="/images/icons/delete.png"/></a><br/>
                                      	<?php endif; ?>
                                      </span>
                                     <br />

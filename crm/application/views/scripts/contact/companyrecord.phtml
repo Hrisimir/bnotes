@@ -25,6 +25,7 @@
                                  	<input type="hidden" value="2" id="tag_type" name="type" />
                                  	<input type="text" name="tag" id="tag" />
                                  	<input type="button" name="submit" id="tag_submit" value="<?php echo $this->translate('Add'); ?>" />
+                                 	<input type="button" name="submit" id="tag_close" value="<?php echo $this->translate('Close'); ?>" />
                                  </div>
                              </hgroup>
                         </header>
@@ -33,11 +34,12 @@
                         		<thead></thead>
                         		<tbody>
 	                        		<tr>
-	                        			<td><a class="active" href="#"><?php echo $this->translate('Notes'); ?></a></td>
-	                        			<td><a href="/contact/companyrecordp/id/<?php echo $this->company['id']?>"><?php echo $this->translate('People'); ?></td>
+	                        			<td><a onclick="showNotes()" class="active"><?php echo $this->translate('Notes'); ?></a></td>
+	                        			<td><a onclick="showPeople()"><?php echo $this->translate('People'); ?></a></td>
 	                        		</tr>
                         		</tbody>
                         	</table>
+                        <div class="notes">
 <!-- Начало на формата  -->
                             <form method="post" action="/contact/companyrecord/id/<?php echo $this->company['id']?>" enctype="multipart/form-data">
                            		<input type="hidden" name="id_company" value="<?php echo $this->company['id']?>" />
@@ -118,7 +120,7 @@
                                     	</a>
                                     	<?php if($this->profile->admin == 1 || $this->profile->id == $note['author']):?>
 	                                    	<a class="fancybox" href="/index/editfancynote/id/<?php echo $note['id']?>"><img class="" src="/images/icons/pencil.png"/></a>
-	                                    	<img id="<?php echo $note['id']?>" class="delete_note" src="/images/icons/delete.png"/><br/>
+	                                    	<a onclick="deleteNote(<?php echo $note['id']?>)"><img id="<?php echo $note['id']?>" class="delete_note" src="/images/icons/delete.png"/></a><br/>
                                      	<?php endif; ?>
                                      </span>
                                     <br />
@@ -154,6 +156,7 @@
 	                            <div class="gimmimoar">
 	                            	<?php echo $this->translate('Show older'); ?>
 	                            </div>
+	                       </div>     
                         </section>
                     </div>
                     <div class="preview-pane grid_3 omega">
@@ -272,7 +275,56 @@ $(function(){
 				},
 				"autofit" 
 	);
+
+	
 });
+
+function showPeople()
+{
+	data = new Object();
+	data.id = <?php echo $this->company['id'];?>;
+	$('div.notes').hide();
+	$.sajax("/contact/companyrecordp",data,function(newdata)
+	{
+		//console.dir(newdata);
+		
+		var ul = $('<ul id="contacts" class="list-view clearfix"></ul>');
+		
+		$.each(newdata, function(pi,pv){
+
+			var li = $('<li class="contact clearfix"></li>');
+			var divA = $('<div class="avatar"><img src="/images/user_32.png" /></div>');
+			var aName = $('<a  class="name"></a>');
+			var divEM = $('<div class="entry-meta"></div>');
+			var aEdit = $('<a><img src="/images/icons/pencil.png" /></a>');
+			var aDelete = $('<a ><img src="/images/icons/delete.png" /></a>');
+
+			li.append(divA);
+			aName.attr('href', '/contact/personrecord/id/'+pv.id);
+			aName.html(pv.name);
+			li.append(aName);
+			aEdit.attr('href','/contact/editperson/id/'+pv.id);
+			aDelete.attr('href','/contact/deleteperson/id/'+pv.id);
+			divEM.html('');
+			divEM.append(aEdit);
+			divEM.append(aDelete);
+			li.append(divEM);
+			ul.append(li);
+		});
+		$('ul#contacts').remove();
+		$('table.tabs').after(ul);
+		$('table.tabs a').removeClass('active');
+		$('table.tabs a:last').addClass('active');
+	});
+}
+
+function showNotes()
+{	
+	$('ul#contacts').remove();
+	$('table.tabs a').removeClass('active');
+	$('table.tabs a:first').addClass('active');
+	$('div.notes').show();
+}
 
 
 </script>

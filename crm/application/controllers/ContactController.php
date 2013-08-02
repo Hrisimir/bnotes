@@ -467,10 +467,12 @@ class ContactController extends Zend_Controller_Action
     }
     
     public function companyrecordpAction()
-    {
+    {	
+    	$this->_helper->layout()->disableLayout();
     	$request = $this->getRequest();
     	$id = $request->getParam('id');
-   		$data = $request->getParams();
+    	
+   		/*$data = $request->getParams();
     	$personModel = new Model_Company();
     	$personModel->setId($id);
     	$tagModel = new Model_Tag();
@@ -479,7 +481,7 @@ class ContactController extends Zend_Controller_Action
     	$this->view->phones = $personModel->fetchPhones();
     	$this->view->emails = $personModel->fetchEmails();
     	$this->view->addresses = $personModel->fetchAdresses();
-    	$this->view->websites = $personModel->fetchWebsites();
+    	$this->view->websites = $personModel->fetchWebsites();*/
     	
     	$modelperon = new Model_Person();
     	$this->view->allcontacts = $modelperon->fetchByCompany($id);

@@ -28,6 +28,7 @@
                                  	<input type="hidden" value="1" id="tag_type" name="type" />
                                  	<input type="text" name="tag" id="tag" />
                                  	<input type="button" name="submit" id="tag_submit" value="<?php echo $this->translate('Add'); ?>" />
+                                 	<input type="button" name="submit" id="tag_close" value="<?php echo $this->translate('Close'); ?>" />
                                  </div>
                              </hgroup>
                         </header>
@@ -115,7 +116,7 @@
                                     	</a>
                                     	<?php if($this->profile->admin == 1 || $this->profile->id == $note['author']):?>
 	                                    	<a class="fancybox" href="/index/editfancynote/id/<?php echo $note['id']?>"><img class="" src="/images/icons/pencil.png"/></a>
-	                                    	<img id="<?php echo $note['id']?>" class="delete_note" src="/images/icons/delete.png"/><br/>
+	                                    	<a onclick="deleteNote(<?php echo $note['id']?>)"><img id="<?php echo $note['id']?>" class="delete_note" src="/images/icons/delete.png"/></a><br/>
                                      	<?php endif; ?>
                                      </span>
                                     <span class="timestamp_left_big">

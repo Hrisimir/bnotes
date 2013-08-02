@@ -170,4 +170,28 @@ class Model_Activity extends Model_Abstract {
 		}
 		return $comments;
 	}
+	
+	public function deleteNote($id)
+	{
+		$table = $this->getTable();
+		$db = $table->getAdapter();
+		$fileModel = new Model_File();
+		
+		$selectChildNotes = $db->select()->from('note','id')->where('pid = ?', $id);
+		$children = $db->fetchAll($selectChildNotes);
+		if($children)
+		{
+			foreach($children as $child)
+			{
+				$fileModel->deleteByNote($child['id']);
+				$where = $db->quoteInto('id = ?', $child['id']);
+				$db->delete('note',$where);
+			}
+		}
+		
+		$fileModel->deleteByNote($id);
+		$where = $db->quoteInto('id = ?', $id);
+		return $db->delete('note',$where);
+		
+	}
 }

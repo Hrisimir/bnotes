@@ -43,4 +43,23 @@ class Model_File extends Model_Abstract {
 		}
 		return null;
 	}
+	
+	public function deleteByNote($id)
+	{
+		$table = $this->getTable();
+		$result =  $table->fetchAll('id_note = '.$id);
+		$array = array();
+		if($result)
+		{
+			foreach($result as $file)
+			{
+				
+				if(unlink(PUBLIC_PATH.str_replace('/', DIRECTORY_SEPARATOR, $file['file'])))
+				{
+					 $table->delete('id = '.$file['id']);
+				}
+			}
+		}
+		
+	}
 }
