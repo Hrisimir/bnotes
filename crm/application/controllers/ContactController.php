@@ -24,6 +24,9 @@ class ContactController extends Zend_Controller_Action
     	$personModel = new Model_Person();
     	$this->view->allcontacts = $personModel->fetchAllConatacts();
     	
+    	$customModel = new Model_Customtag();
+    	$this->view->custom = $customModel->fetchAll();
+    	
     	$tagModel = new Model_Tag();
     	$this->view->tags = $tagModel->sortAndIndexArray($tagModel->fetchAll());
     }
@@ -172,6 +175,18 @@ class ContactController extends Zend_Controller_Action
 		    	}
 	    	}
 	    	$values = $groupModel->fetch();
+	    	
+	    	$modelCustomFileds = new Model_Customtag();
+	    	$fields = $modelCustomFileds->fetchAll();
+	    	$this->view->fields = $fields;
+	    	if($fields)
+	    	{
+	    		foreach($fields as $field)
+	    		{
+	    			$form->addElement('text',$field['name'],array('label'=>$field['label']));
+	    		}
+	    	}
+	    	
 	    	$form->populate($values);
 	    	$this->view->phones = $groupModel->fetchPhones();
 	    	$this->view->emails = $groupModel->fetchEmails();
@@ -493,7 +508,12 @@ class ContactController extends Zend_Controller_Action
     	$request = $this->getRequest();
     	$data = $request->getParams();
     	$personModel = new Model_Person();
-    	$this->view->data = $personModel->fetchAllConatacts($data['count']);
+    	if(isset($data['filters']))
+    	{
+    		$this->view->data = $personModel->fetchAllConatacts($data['count'],6,$data['filters']);
+    	}else{
+    		$this->view->data = $personModel->fetchAllConatacts($data['count']);
+    	}
     }
     
     public function importAction()

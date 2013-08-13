@@ -151,16 +151,39 @@ class Model_Person extends Model_Abstract
     	$table->delete('id = '.$this->id);
     }
     
-    public function fetchAllConatacts($limitstart = 0, $limitend = 6)
-    {
+    public function fetchAllConatacts($limitstart = 0, $limitend = 6, $filters = null)
+    {	
+    	
     	$userId = $this->getCurrentUser()->id;
 		$table = $this->getTable();
 		$db = $table->getAdapter();
 		$selectPerson = $db->select()	->from(array('p'=>'person'),array('p.id',  'name' => new Zend_Db_Expr("CONCAT(firstname, ' ', lastname)"), 'type' =>new Zend_Db_Expr("1")));
 		$selectCompany = $db->select()->from(array('c'=>'company'),array('c.id',  'c.name', 'type' =>new Zend_Db_Expr("0")));
-		$select = $db->select()->union(array($selectPerson, $selectCompany))
-							->order('id desc')
-							->limit($limitend, $limitstart);
+		
+		if($filters)
+		{
+			foreach ($filters as $k=>$v)
+			{	
+				if($k == 'type')
+				{
+					if($v == 1)
+					{
+						$selectCompany->where('0 = 1');
+					}else{
+						$selectPerson->where('0 = 1');
+					}
+					continue;
+				}
+				
+				$cond = $db->quoteInto($k.' = ?', $v);
+				$selectPerson->where($cond);
+				$selectCompany->where($cond);
+			}
+		}
+		$select = $db->select()	->union(array($selectPerson, $selectCompany))
+								->order('id desc')
+								->limit($limitend, $limitstart);
+		//Zend_Debug::dump($select->__toString());die;
 		return $db->fetchAll($select);
     }
     

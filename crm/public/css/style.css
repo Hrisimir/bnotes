@@ -524,6 +524,7 @@ span.tag
 	padding: 1px 3px;
 	background: #ddd;
 	border-radius: 3px;
+	cursor:pointer;
 
 }
 a.tag_delete

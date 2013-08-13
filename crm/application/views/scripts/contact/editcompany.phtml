@@ -61,6 +61,11 @@
 					<b><?php echo $this->translate('Custom fields'); ?></b>
 					<a style="float:right"   href="/contact/customfields" ><?php echo $this->translate('Set up custom fields'); ?></a>
 					<hr>
+					<?php if($this->fields):?>
+						<?php foreach($this->fields as $field):?>
+							<div><?= $this->form->$field['name']; ?></div>
+						<?php endforeach;?>
+					<?php endif;?>
 				</div>
 				<br /><br />
 		<label>&nbsp;</label><?= $this->form->save ?>

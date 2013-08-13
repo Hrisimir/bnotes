@@ -4,11 +4,22 @@
 
                     <div class="main-content grid_5 alpha">
 <header>
-<ul class="action-buttons clearfix fr">
-</ul>
-<div class="view-switcher">
-<h2><?php echo $this->translate('All Contacts'); ?></h2>
-</div>
+	<ul class="action-buttons clearfix fr">
+	</ul>
+	<div class="view-switcher">
+		<form style="float:right;" id="filters_form">
+			<select id="contact_type">
+					<option><?php echo $this->translate('Choose person or company'); ?></option>
+					<option  value="1">
+						<?php echo $this->translate('Person'); ?>
+					</option>
+					<option  value="0">
+						<?php echo $this->translate('Company'); ?>
+					</option>
+			</select>
+		</form>
+		<h2><?php echo $this->translate('All Contacts'); ?></h2>
+	</div>
 </header>
 
 	<?php if($this->msg) : ?>
@@ -30,6 +41,26 @@
 if ($this->allcontacts) :
 	?>
 	                       <section>
+	                       <div class="search_fields">
+	                       		<?php if($this->custom){
+	                       			foreach($this->custom as $i=>$val)
+	                       			{
+	                       				echo '	<span class="tag" style="margin: 2px;">
+						                       		<a class="search_field" id="'.$val['name'].'">
+						                       			'.$val['label'].'
+						                       		</a>
+					                       		</span>
+												<input type="text" class="filter_input" id="'.$val['name'].'" value="" name="'.$val['name'].'" style="display:none" />
+												<a  class="button button-gray filter" id="'.$val['name'].'" style="display:none">
+													'.$this->translate('Filter').'
+												</a>
+												<a class="button button-gray cancel" id="'.$val['name'].'" style="display:none">
+													'. $this->translate('Cancel').'
+												</a>
+												';
+	                       			}
+	                       		}?>
+	                       </div>
 	                        <ul id="contacts" class="listing list-view clearfix">
                         	<?php
 							foreach ( $this->allcontacts as $task ) :
@@ -94,7 +125,24 @@ if ($this->allcontacts) :
 <script type="text/javascript">
 $(function(){
 	var data = new Object();
+	var filters = new Object();
 	data.count = 6;
+
+		$('select#contact_type').change(function(){
+				filters.type = $(this).val();
+				data.filters = filters;
+				if(filters.type == 1)
+				{
+					$('li.company').hide();
+					$('li.contact').show();
+					data.count = $('li.contact').size();
+				}else{
+					$('li.contact').hide();
+					$('li.company').show();
+					data.count = $('li.company').size();
+				}
+				data =  addContacts(data);
+		});
 	
 		$('.gimmimoar').mouseover(
 			function(){
@@ -107,7 +155,51 @@ $(function(){
 				 data =  addContacts(data);
 			   }
 		});
+
+		$('a.search_field').click(function(){
+
+			$('a.cancel').hide();
+			$('input.filter_input').hide();
+			$('span.tag').show();
+			$('a.filter').hide();
+			
+			$(this).parent().hide();
+			$(this).parent().next().show();
+			$(this).parent().next().next().show();
+			$(this).parent().next().next().next().show();
+		});
+
+		$('a.filter').click(function(){
+			var inputs = $('input.filter_input').serializeArray();
+			$.each(inputs, function(ii,input){
+				if(input.value)
+				{
+					filters[input.name] = input.value; 
+				}
+			});
+			$('li.contact').remove();
+			$('li.company').remove();
+			data.count = 0;
+			data.filters = filters;
+			data =  addContacts(data);
+		});
+
+
+		$('a.cancel').click(function(){
+			$('a.cancel').hide();
+			$('input.filter_input').hide();
+			$('span.tag').show();
+			$('a.filter').hide();
+
+			$('li.contact').remove();
+			$('li.company').remove();
+			data.count = 0;
+			data.filters = new Object();
+		});
 });
+
+
+
 
 
 </script>
