@@ -40,7 +40,7 @@ Folders CRM and LOGIN should be copied to HTDOCS and virtual hosts created respe
 
 License
 ----
-
+MIT
 **Free Software**
 
 Bugs
