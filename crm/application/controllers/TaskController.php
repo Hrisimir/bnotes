@@ -20,8 +20,70 @@ class TaskController extends Zend_Controller_Action{
     	{
     		$this->view->error = $data['error'];
     	}
+    	
     	$taskModel = new Model_Task();
-    	$this->view->tasks = $taskModel->fetchAll();
+    	$tasks = $taskModel->fetchAll();
+
+    	$tasktoday= null;
+    	$taskOverdue= null;
+    	$taskFuture= null;
+    	
+    	$taskCategory = array();
+    	$taskCategoryArray = array();
+
+    	$owners = array();
+    	$ownersArray = array();
+    	
+    	foreach($tasks as $task)
+    	{
+    		switch ($task)
+    		{
+    			case date('Y-m-d', strtotime($task['duedate'])) == date('Y-m-d'):
+    				$tasktoday[] = $task;
+    				break;
+    			case date('Y-m-d', strtotime($task['duedate'])) < date('Y-m-d'):
+    				$taskOverdue[] = $task;
+    				break;
+    			case date('Y-m-d', strtotime($task['duedate'])) > date('Y-m-d'):
+    				$taskFuture[] = $task;
+    			default:
+    				break;
+    		}
+    	
+    		if(!in_array($task['id_category'], $taskCategory))
+    		{
+    			array_push($taskCategory, $task['id_category']);
+    			$tmpArr = array('id' => $task['id_category'], 'name' => $task['category']);
+    			array_push($taskCategoryArray, $tmpArr);
+    		}
+    		
+    		if(!in_array($task['owner'], $owners))
+    		{
+    			array_push($owners, $task['owner']);
+    			$tmpArr = array('id' => $task['owner'], 'name' => $task['ownername']);
+    			array_push($ownersArray, $tmpArr);
+    		}
+    		//if(date('Y-m-d', strtotime($task['duedate'])) == date('Y-m-d'))
+    		//$tasktoday[] = $task;
+    	
+    		//if(date('Y-m-d', strtotime($task['duedate'])) < date('Y-m-d'))
+    		//$taskOverdue[] = $task;
+    	}
+    	
+    	$user = $taskModel->getCurrentUser();
+    	
+    	if(!in_array($user->id, $owners))
+    	{
+    		array_push($ownersArray, array('id' => $user->id, 'name' => $user->firstname .' '. $user->lastname));
+    	}
+
+    	$this->view->owners = $ownersArray;
+    	$this->view->categories = $taskCategoryArray;
+    	
+    	$this->view->tasks = $tasks;
+    	$this->view->taskOverdue = $taskOverdue;
+    	$this->view->taskFuture = $taskFuture;
+    	$this->view->tasktoday = $tasktoday;
     }
     
 	public function addAction()
@@ -95,4 +157,24 @@ class TaskController extends Zend_Controller_Action{
     	}
     }
     
+    public function finishAction()
+    {
+    	$this->_helper->layout()->disableLayout();
+    	$id = $this->getRequest()->getParam('id');
+    	$taskModel = new Model_Task();
+    	$this->view->num = $taskModel->finish($id);
+    }
+    
+    public function filtertaskAction()
+    {
+    	$this->_helper->layout()->disableLayout();
+    	$data = $this->getRequest()->getParams();
+    	
+    	unset($data['module']);
+    	unset($data['controller']);
+    	unset($data['action']);
+    	
+    	$taskModel = new Model_Task();
+    	$this->view->filtertasks = $taskModel->filtertask($data);
+    }
 }

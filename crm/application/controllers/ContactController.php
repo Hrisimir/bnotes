@@ -1024,6 +1024,7 @@ class ContactController extends Zend_Controller_Action
     {	
     	$this->_helper->layout()->disableLayout();
     	$data = $this->getRequest()->getParams();
+    	
     	if(isset($data['id_person']) && $data['id_person'])
     	{
     		$modelPerson = new Model_Person();
