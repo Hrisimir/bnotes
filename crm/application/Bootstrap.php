@@ -48,6 +48,15 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
     	Zend_Registry::set('config', $config);
     	Zend_Registry::set('config2', $config2);
     	Zend_Registry::set('application', $config3);
+    	
+    	$this->bootstrap('layout');
+    	$layout = $this->getResource('layout');
+    	$view = $layout->getView();
+    	if(isset($config->email))
+    	{
+    		$view->emailname = $config->email->name;
+    		$view->emaildomain = $config->email->domain;
+    	}
     	return $config;
     }
     protected function _initDatabase ()
@@ -265,6 +274,23 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 			$view->companies = $companyModel->getCompanies();
         }
     }
+    protected function _initProfiles()
+    {
+    	$this->bootstrap('database');
+    	$db = $this->getResource('database');
+    	if (!$db) {
+    		return;
+    	}
+    	$auth =  Zend_Auth::getInstance();
+    	if ($auth->hasIdentity())
+    	{
+    		$this->bootstrap('layout');
+    		$layout = $this->getResource('layout');
+    		$view = $layout->getView();
+    		$companyModel = new Model_Profile();
+    		$view->profiles = $companyModel->fetchPairs();
+    	}
+    }
     
 	protected function _initPerson()
     {
@@ -282,8 +308,31 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 	        $companyModel = new Model_Person();
 			$view->contactsnum = $companyModel->getContactsNumber();
 			$view->contacts = $companyModel->fetchLatest();
+			$view->persons = $companyModel->getPersons();
         }
     }
+    
+    protected function _initLatestC()
+    {
+    	$this->bootstrap('database');
+    	$db = $this->getResource('database');
+    	if (!$db) {
+    		return;
+    	}
+    	$auth =  Zend_Auth::getInstance();
+    	if ($auth->hasIdentity())
+    	{
+    		$this->bootstrap('layout');
+    		$layout = $this->getResource('layout');
+    		$view = $layout->getView();
+    		if(isset($_COOKIE['latest']) && $_COOKIE['latest'])
+    		{
+	    		$companyModel = new Model_Person();
+	    		$view->latestC = $companyModel->fetchCookieLatest($_COOKIE['latest']);
+    		}
+    	}
+    }
+    
     
 	protected function _initProject()
     {
