@@ -20,6 +20,12 @@
     });
 })(jQuery);
 
+(function($) {
+    $.fn.hasScrollBar = function() {
+        return this.get(0).scrollHeight > this.height();
+    };
+})(jQuery);
+
 (function($){
   
   $.fn.placeholder = function(options) {
@@ -38,6 +44,8 @@
 
 var menuYloc = null;
 var previewYloc = null;
+
+
 
 function initAutocompleter(){
 
@@ -100,9 +108,151 @@ function deleteTag(id)
 		}
 	});
 }
+
+function addToLastviewed(t,id)
+{	
+	
+	if(t == 0)
+	{
+		var data = pushPerson(id);
+		$.cookie('latest', JSON.stringify(data), { path: '/'});
+	}else{
+		var data = pushCompany(id);
+		$.cookie('latest', JSON.stringify(data), { path: '/'});
+	}
+	 console.dir(JSON.parse($.cookie('latest')));
+}
+
+function pushPerson(id)
+{
+	if($.cookie('latest'))
+	{
+		cookiedata = JSON.parse($.cookie('latest'));
+		if(cookiedata.person)
+		{	
+			index = indexOf.call(cookiedata.person, id); // 1
+			if(index == -1)
+			{	
+				if(cookiedata.person.length > 3){
+					cookiedata.person.shift();
+				}
+				cookiedata.person.push(id);
+			}
+			
+		}else{
+			if(cookiedata){}
+			else{
+				cookiedata = new Object();
+			}
+			cookiedata.person = new Array();
+			cookiedata.person.push(id);
+			
+		}
+	}else{
+		cookiedata = new Object();
+		cookiedata.person = new Array();
+		cookiedata.person.push(id);
+	}
+	return cookiedata;
+}
+
+function pushCompany(id)
+{
+	if($.cookie('latest'))
+	{
+		cookiedata = JSON.parse($.cookie('latest'));
+		if(cookiedata.company)
+		{	
+			index = indexOf.call(cookiedata.company, id); // 1
+			if(index == -1)
+			{	
+				if(cookiedata.company.length > 3){
+					cookiedata.company.shift();
+				}
+				cookiedata.company.push(id);
+			}
+				
+		}else{
+			
+			if(cookiedata){}
+			else{
+				cookiedata = new Object();
+			}
+			cookiedata.company = new Array();
+			cookiedata.company.push(id);
+		}
+	}else{
+		cookiedata = new Object();
+		cookiedata.company = new Array();
+		cookiedata.company.push(id);
+	}
+	return cookiedata;
+}
+
+var indexOf = function(needle) {
+    if(typeof Array.prototype.indexOf === 'function') {
+        indexOf = Array.prototype.indexOf;
+    } else {
+        indexOf = function(needle) {
+            var i = -1, index = -1;
+
+            for(i = 0; i < this.length; i++) {
+                if(this[i] === needle) {
+                    index = i;
+                    break;
+                }
+            }
+
+            return index;
+        };
+    }
+    return indexOf.call(this, needle);
+};
+
+
+function replaceURLWithHTMLLinks(text) {
+    var exp = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
+    return text.replace(exp,"<a href='$1'>$1</a>"); 
+}
+
+function fitTextarea() 
+{	
+	if($('textarea.markItUpTextarea').hasScrollBar())
+	{
+		$('textarea.markItUpTextarea').css('max-height',"50px");
+		$('textarea.markItUpTextarea').css('height',"50px");
+	}
+  
+};
+
+
+function resizeTextarea() 
+{	
+	if($('textarea.markItUpTextarea').hasScrollBar())
+	{
+		$('textarea.markItUpTextarea').css('max-height',"300px");
+		$('textarea.markItUpTextarea').css('height',"300px");
+	}
+  
+};
+
+
+$(window).load(function(){
+	$('textarea.markItUpTextarea').keydown(function() {
+		resizeTextarea();
+	});
+	
+	$('textarea.markItUpTextarea').blur(function() {
+		fitTextarea();
+	});
+	$.each($('p'), function(i,e){
+		$(e).html(replaceURLWithHTMLLinks($(e).html()));
+	});
+});
+
+
 // perform JavaScript after the document is scriptable.
 $(document).ready(function() {
-	
 	
 	//tags ^^
 	$('input#tag_submit').click(function()
@@ -232,19 +382,8 @@ $(document).ready(function() {
         $(this).parents('.popupballoon').fadeOut();
     });
 
-    // preview pane setup
-    $('.list-view > li').click(function(){
-        var url = $(this).find('.more').attr('href');
-        if (!$(this).hasClass('current')) {
-            $('.preview-pane .preview').animate({left: "-375px"}, 300, function(){
-                $(this).animate({left: "-22px"}, 500).html('<img src="images/ajax-loader.gif" />').load(url);
-            });
-        } else {
-            $('.preview-pane .preview').animate({left: "-375px"}, 300);
-        }
-        $(this).toggleClass('current').siblings().removeClass('current');
-        return false;
-    });
+  
+    
     
     $('.list-view > li a:not(.more)').click(function(e){ e.stopPropagation(); });
 
@@ -417,27 +556,29 @@ $(document).ready(function() {
     		{	
     			var data = new Object();
     			data.name = $('input#taskname').val();
+    			data.owner = $('select#owner').val();
     			data.due = $('input#taskdue').val();
     			data.cat = $('select#taskCat').val();
-    			//if($('#publictask').is(":checked"))
-    			//{
+    			
+    			if($('#publictask').is(":checked"))
+    			{
     				data.publ = 1;
-    			//}else{
-    				//data.publ = 0;
-    			//}	
-    				var val = $('#catInput').val();
-    				if(val && val != "")
-    				{	
-    					addcategoryandtask(val);
-    				}else{
-    					console.dir(data);
-		    			if(data.name != '' && data.due != "" && data.cat != "")
-		    			{
-		    				$.sajax("/task/add",data, function(data){
-		    					if(data.id){location.replace('/task/index'); }
-		    				});
-		    			}
-    				}
+    			}else{
+    				data.publ = 0;
+    			}	
+    			
+				var val = $('#catInput').val();
+				if(val && val != "")
+				{	
+					addcategoryandtask(val);
+				}else{
+	    			if(data.name != '' && data.due != "" && data.cat != "")
+	    			{
+	    				$.sajax("/task/add",data, function(data){
+	    					if(data.id){location.replace('/task/index'); }
+	    				});
+	    			}
+				}
     		}
     );
     
@@ -456,6 +597,9 @@ $(document).ready(function() {
     );
     editNote();
 });
+
+
+
 function addtaskcategory(val){
 		$.sajax("/task/addcategory", {cat:val}, function(data){
 			if(data)
@@ -562,6 +706,7 @@ function addcategoryandtask(val)
 			$('#catInput').remove();
 			
 			data.name = $('input#taskname').val();
+			data.owner = $('select#owner').val();
 			data.due = $('input#taskdue').val();
 			data.cat = $('select#taskCat').val();
 			
@@ -588,6 +733,7 @@ function addNotes(data)
 
 				var li = $('<li class="note" id="'+e.id+'"></li>');
 				var a = $('<a></a>');
+				
 				var span = $('<span class="timestamp"></span>');
 				var span2 = $('<span class="timestamp_left"></span>');
 				var p = $('<p></p>');
@@ -601,6 +747,11 @@ function addNotes(data)
 					var a2 = $('<a></a>');
 					a2.attr('href','/contact/companyrecord/id/'+e.id_company);
 					a2.html(e.company);
+					
+					if(e.avatar){
+						var divAvatar = $('<div style="float:left; margin-right: 10px;"><img width="55" height="55" src="'+e.avatar+'"/></div>');
+						li.append(divAvatar);
+					}
 					li.append(a);
 					if($.cookie('lang') == 'bg')
 						{
@@ -668,14 +819,43 @@ function addNotes(data)
 						divFiles.append(aFile);
 					});
 				}
-				span2.append(e.cdate);
+				
+				if($.cookie('lang') == 'en')
+				{
+					var d_names = new Array("Sunday", "Monday", "Tuesday",
+						"Wednesday", "Thursday", "Friday", "Saturday");
+
+					var m_names = new Array("January", "February", "March", 
+						"April", "May", "June", "July", "August", "September", 
+						"October", "November", "December");
+				}else{
+					var d_names = new Array("Неделя", "Понеделник", "Вторник",
+							"Сряда", "Четвъртък", "Петък", "Събота");
+
+						var m_names = new Array("Януари", "Февруари", "Март", 
+							"Април", "Май", "Юни", "Юли", "Август", "Септември", 
+							"Октомври", "Ноември", "Декември");
+				}
+
+				if(e.when){
+					var d = new Date(e.when);
+				}else{
+					var d = new Date(e.cdate);
+				}
+				
+				var curr_day = d.getDay();
+				var curr_date = d.getDate();
+				var curr_month = d.getMonth();
+				var curr_year = d.getFullYear();
+				
+				span2.append('<b>'+d_names[curr_day] + ",  " + m_names[curr_month] + " " + curr_date + " " + curr_year+'</b>');
 				if(profile.admin == 1 || profile.id == e.author)
 				{
 					span.append('<a href="/index/comment/id/'+e.id+'"><img src="/images/icons/comment.png"/></a><a class="fancybox" href="/index/editfancynote/id/'+e.id+'"> <img class="" src="/images/icons/pencil.png"/></a><a onclick="deleteNote('+e.id+')"><img id="'+e.id+'" class="delete_note" src="/images/icons/delete.png"/></a><br/>');
 				}else{
 					span.append('<a href="/index/comment/id/'+e.id+'"><img src="/images/icons/comment.png"/></a><br/>');
-				}
-				p.append(e.note);
+				}			
+				p.append(replaceURLWithHTMLLinks(e.note));
 				div.append(e.profile);
 				
 				li.append(span);
@@ -789,8 +969,13 @@ function addNotesC(data)
 				
 				span2.append('<b>'+d_names[curr_day] + ",  " + m_names[curr_month] + " " + curr_date + " " + curr_year+'</b>');
 				span.append('<a href="/index/comment/id/'+e.id+'"><img src="/images/icons/comment.png"/></a><a class="fancybox" href="/index/editfancynote/id/'+e.id+'"><img class="" src="/images/icons/pencil.png"/></a> <a onclick="deleteNote('+e.id+')"><img id="'+e.id+'" class="delete_note" src="/images/icons/delete.png"/></a><br/>');
-				p.append(e.note);
+				p.append(replaceURLWithHTMLLinks(e.note));
 				div.append(e.profile);
+				
+				if(e.avatar){
+					var divAvatar = $('<div style="float:left; margin-right: 10px;"><img width="55" height="55" src="'+e.avatar+'"/></div>');
+					li.append(divAvatar);
+				}
 				
 				li.append(span);
 				li.append(span2);
@@ -823,38 +1008,66 @@ function addContacts(data)
 		if(newdata.length > 0)
 		{	
 			$.each(newdata, function(i,e){
-					
+				e.phone = e.phone==null?'':e.phone;
+				e.email = e.email==null?'':e.email;
+				
 				switch(e.type)
 				{	
 					case "1":
+						e.avatar = (e.avatar)?e.avatar:'/images/user_32.png';
+						var divCheck = $('<div class="check" style="float:left; padding: 0 10px"></div>');
+						var inputCheck = $('<input name="contact" type="checkbox" class="person checks" id="'+e.id+'" />');
+						var inputHidden = $('<input name="contact-type" type="hidden" id="'+e.type+'" />');
 						var li = $('<li class="contact clearfix"></li>');
-						var div1 = $('<div class="avatar"><img src="/images/users_business_32.png" /></div>');
-						var a = $('<a href="/contact/personrecord/id/'+e.id+'" class="name">'+e.name+e.id+'</a>');
+						var div1 = $('<div class="avatar"><img src="'+e.avatar+'" /></div>');
+						var a = $('<a href="/contact/personrecord/id/'+e.id+'" class="name">'+e.name+'</a>');
+						var span = $('<div class="meta"><a href="mailto:'+e.email+'?bcc='+data.emailname+e.id_company+'a'+data.profile+'@'+data.emaildomain+'">'+e.email+'</a> '+e.phone+'</div>');
 						var a1 = $('<a href="/contact/editperson/id/'+e.id+'" ><img src="/images/icons/pencil.png" /></a>');
 						var a2 = $('<a href="/contact/deleteperson/id/'+e.id+'"><img src="/images/icons/delete.png" /></a>');
 						break;
 					case "0":
+						e.avatar = (e.avatar)?e.avatar:'/images/users_business_32.png';
+						var divCheck = $('<div class="check" style="float:left; padding: 0 10px"></div>');
+						var inputCheck = $('<input name="contact" type="checkbox" class="company checks" id="'+e.id+'" />');
+						var inputHidden = $('<input name="contact-type" type="hidden" id="'+e.type+'" />');
 						var li = $('<li class="company clearfix"></li>');
-						var div1 = $('<div class="avatar"><img src="/images/user_32.png" /></div>');
-						var a = $('<a href="/contact/companyrecord/id/'+e.id+'" class="name">'+e.name+e.id+'</a>');
+						var div1 = $('<div class="avatar"><img src="'+e.avatar+'" /></div>');
+						var a = $('<a href="/contact/companyrecord/id/'+e.id+'" class="name">'+e.name+'</a>');
+						var span = $('<div class="meta_email"><a href="mailto:'+e.email+'?bcc='+data.emailname+e.id_company+'a'+data.profile+'@'+data.emaildomain+'">'+e.email+'</a> '+e.phone+'</div>');
 						var a1 = $('<a href="/contact/editcompany/id/'+e.id+'"><img src="/images/icons/pencil.png" /></a>');
 						var a2 = $('<a href="/contact/deletecompany/id/'+e.id+'"><img src="/images/icons/delete.png" /></a>');
 						break;
 				
 				}
 				
+				var p = $('<p class="tags"></p>');
+				if(e.tags)
+				{
+					$.each(e.tags, function(k,t){
+						var tag = $('<span class="tag tag'+t.id+'"><a class="tag" href="/contact/sort/tag/'+t.id+'">'+t.name+'</a></span>');
+						p.append(tag);
+					});
+				}
+				//var tag = $('<span class="tag tag<?php echo $tag['id']; ?>"><a class="tag" href="/contact/sort/tag/<?php echo $tag['id']?>"><?php echo $tag['name']?></a></span>');
+				
 				var div2 = $('<div class="entry-meta"></div>');
 				div2.append(a1);
 				div2.append(a2);
-				
+				inputCheck.click(function(){toogleTools(inputCheck);})
+				divCheck.append(inputCheck);
+				divCheck.append(inputHidden);
+				li.append(divCheck);
 				li.append(div1);
 				li.append(a);
+				li.append(span);
 				li.append(div2);
+				li.append(p);
 				$("ul.listing").append(li);
 			});
 			data.count = data.count + 6;
 		}
 	});
+	
 	return data;
 }
 
@@ -871,6 +1084,31 @@ function deleteNote(id)
 		
 	});
 }
+
+function toogleTools(e)
+{
+	if($(e).attr("checked"))
+	{
+		$('div.tools').show();
+		$('span#numberOfChecks').html(parseInt($('span#numberOfChecks').html())+1);
+    }else{	
+    	$('span#numberOfChecks').html(parseInt($('span#numberOfChecks').html())-1);
+	    	var cflag = false;
+			$.each($('input.checks'),function(i,e){
+				if($(e).attr("checked"))
+				{
+					cflag = true;
+				}
+			});
+
+			if(!cflag)
+			{
+				$('div.tools').hide();
+			};
+	};
+};
+
+
 
 
 
