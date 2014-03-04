@@ -618,4 +618,16 @@ class Model_Person extends Model_Abstract
 		
 		return true;
 	}
+	
+	public function getPersons()
+	{
+		$userId = $this->getCurrentUser()->id;
+		$table = $this->getTable();
+		$db = $table->getAdapter();
+		$select = $db->select()	->from(array('p'=>'person'),array('p.id', 'name' => new Zend_Db_Expr("CONCAT(firstname, ' ', lastname)")))
+			->joinLeft(array('g'=>'groups'),'p.publ = g.id','')
+			->joinLeft(array('pg'=>'profile_group'),'pg.id_group = g.id','')
+			->where('author = ? or publ = 0 or pg.id_profile = ?', $userId);
+		return $db->fetchAll($select);
+	}
 }
