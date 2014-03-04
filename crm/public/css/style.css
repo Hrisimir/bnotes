@@ -488,9 +488,9 @@ body.login {
     box-shadow: 0 0 3px #777;
     display: block;
     float: left;
-    height: 60px;
+    height: 55px;
     margin-right: 10px;
-    width: 60px;
+    width: 55px;
 }
 
 .main-content > header .tags {
@@ -521,6 +521,7 @@ body.login {
 }
 span.tag
 {	
+	float: left;
 	padding: 1px 3px;
 	background: #ddd;
 	border-radius: 3px;
@@ -659,15 +660,17 @@ div.display_tags
 }
 
 .list-view > li.contact {
-    background: transparent url(../images/icons/vcard.png) no-repeat 30px 10px;
 }
 
 .list-view > li.company {
-    background: transparent url(../images/icons/building.png) no-repeat 30px 10px;
 }
 
 .list-view > li.note {
     background: transparent url(../images/icons/note.png) no-repeat 30px 10px;
+}
+
+.list-view > li.comment {
+    background: transparent url(../images/icons/comment.png) no-repeat 30px 10px;
 }
 
 .list-view > li.tick {
@@ -1206,6 +1209,91 @@ div.custom-fields
 }
 
 span.field_name{font-size: 1.5em}
-
 span.field_delete{float: right; cursor:pointer;}
 span.field_rename{float: right; padding-right: 20px; cursor:pointer;}
+span.import_preview{padding: 3px;}
+div.selected_fields { padding: 10px; float:right}
+div.tools { padding: 10px; float:left}
+
+.tag
+{	
+	padding: 1px 3px;
+	background: #ddd;
+	border-radius: 3px;
+	cursor:pointer;
+	margin: 2px;
+}
+
+.add_tag, .changeHowCanSee
+{
+	display: block;
+	clear: both;
+	padding: 10px;
+	background-color: hsl(208, 40%, 96%);
+}
+
+.changeHowCanSee div
+{
+	padding: 5px;
+}
+
+.red
+{
+	color: #FF0000;
+}
+
+.taskedit {
+    background: #FFFFFF;
+    border-bottom-left-radius: 5px;
+    border-color: #CCCCCC;
+    border-image: none;
+    border-style: solid none solid solid;
+    border-top-left-radius: 5px;
+    border-width: 1px medium 1px 1px;
+    float: left;
+    font-size: 10px;
+    height: 30px;
+    left: -120px;
+	line-height: 25px;
+	margin: 5px 0;
+    position: absolute;
+    vertical-align: middle;
+    width: 120px;
+    z-index: 10;
+}
+
+
+.deleteTask, .changeTask {
+	cursor: pointer;
+    float: left;
+    margin: 1px;
+    vertical-align: middle;
+}
+
+.search_fields {
+    clear: both;
+    display: block;
+    overflow: hidden;
+}
+
+.editTask {
+    color: #FF0000;
+    font-weight: bold;
+	font-size: 11px;
+}
+
+.taskWrap {
+    display: block;
+    height: 15px;
+    margin: 0;
+    padding: 0;
+    position: relative;
+}
+
+.allContacts a {
+	color: #ccc;
+}
+
+.tools a {
+cursor: pointer;
+}
