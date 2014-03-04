@@ -34,6 +34,17 @@ class Form_Company extends Zend_Form
             'label' => 'Name',
         	'decorators' => $elementDecorators
          ));
+        
+        $file = $this->addElement('file', 'avatar', array(
+        		 'validators' => array(
+		            array('IsImage', false),
+		            array('Size', false, '2097152'),
+		            array('Upload', false)
+        		 ),
+        		'required' => false,
+        		'label' => 'Avatar'
+        ));
+         
          
         $idnum = $this->addElement('text', 'idnum', array(
             'validators' => array(
@@ -90,6 +101,55 @@ class Form_Company extends Zend_Form
          ));
          
 
+         $city = $this->addElement('text', 'city', array(
+         		'filters' => array('StringTrim', 'StringToLower'),
+         		'validators' => array(
+         		),
+         		'required' => false,
+         		'class' => 'city',
+         		'label' => 'City',
+         		'decorators' => $elementDecorators
+         ));
+          
+         $state = $this->addElement('text', 'state', array(
+         		'filters' => array('StringTrim', 'StringToLower'),
+         		'validators' => array(
+         		),
+         		'required' => false,
+         		'label' => 'State',
+         		'decorators' => $elementDecorators
+         ));
+          
+         $zip = $this->addElement('text', 'zip', array(
+         		'filters' => array('StringTrim', 'StringToLower'),
+         		'validators' => array(
+         		),
+         		'required' => false,
+         		'label' => 'Zip',
+         		'decorators' => $elementDecorators
+         ));
+          
+         $companyModel = new Model_Company();
+         
+         $countryOptions = $companyModel->query('select id, name from nmcl_country');
+          
+         $country = $this->addElement('select', 'country', array(
+         		'required' => false,
+         		'multioptions' => $this->arrayOption($countryOptions),
+         		'decorators' => $elementDecorators,
+         		'label' => 'Country',
+         		'class' => ''
+         ));
+          
+         $address_typeOptions = $companyModel->query('select id, name from nmcl_addresstype');
+          
+         $address_type = $this->addElement('select', 'address_type', array(
+         		'required' => false,
+         		'multioptions' => $this->arrayOption($address_typeOptions),
+         		'decorators' => $elementDecorators,
+         		'label' => 'Type',
+         		'class' => ''
+         ));
     
         $save = $this->addElement('submit', 'save', array(
             'required' => false,
@@ -99,5 +159,17 @@ class Form_Company extends Zend_Form
         	'decorators' => $butonDecorators
         		
         ));
+    }
+    
+    protected function arrayOption($array)
+    {
+    	$row = array();
+    	 
+    	foreach($array as $temprow)
+    	{
+    		$row[$temprow['id']] = $temprow['name'];
+    	}
+    
+    	return $row;
     }
 }

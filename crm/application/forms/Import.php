@@ -56,7 +56,7 @@ class Form_Import extends Zend_Form
         $save = $this->addElement('submit', 'save', array(
             'required' => false,
             'ignore' => true,
-            'label' => 'Import',
+            'label' => 'Preview',
         	'class' => 'button button-gray',
         	'decorators' => $butonDecorators
         		
