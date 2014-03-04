@@ -1,15 +1,39 @@
 <!-- Main Section -->
 
-                <section class="main-section grid_7">
+<section class="main-section grid_7">
 
-                    <div class="main-content grid_5 alpha">
-<header>
-<ul class="action-buttons clearfix fr">
-</ul>
-<div class="view-switcher">
-<h2><?php echo $this->translate('Contacts'); ?></h2>
-</div>
-</header>
+	<div class="main-content grid_5 alpha">
+	<header>
+		<ul class="action-buttons clearfix fr">
+		</ul>
+		<div class="view-switcher">
+		<h2>
+			<?php 
+				$tag = $this->tag;
+				
+				if($tag['name'])
+				{
+					echo '<span class="rename_tag_lbl">'.$this->translate('Contacts tagged with'). ' "<span class="rename_tag_name">'.$tag['name'].'</span>"'.'</span>';
+					echo '<span class="rename_tag">'.$this->translate('Rename tag').'</span>';
+					?>
+					
+					<div class="rename_tag_form" style="display: none;">
+						<input type="text" name="tag" id="tag" value="<?php echo $tag['name']; ?>"/>
+						<input type="hidden" name="id_tag" id="id_tag" value="<?php echo $tag['id']; ?>"/>
+						<input type="button" name="submit" id="rename_tag_submit" value="<?php echo $this->translate('Rename'); ?>" />
+						<input type="button" name="submit" id="rename_tag_close" value="<?php echo $this->translate('Close'); ?>" /> <br>
+						<span id="msg-edit-tag-exist" style="display: none; color: #ff0000; font-size: 8px;"><?php echo $this->translate('Tag with this name already exists'); ?></span>
+		            </div>
+		            
+					<?php 
+				} else {
+					echo $this->translate('No Contacts tagged with'). ' "'.$tag['name'].'"';
+				}
+			?>
+			
+		</h2>
+		</div>
+	</header>
 
 	<?php if($this->msg) : ?>
 	<div style="padding: 5px;">
@@ -29,7 +53,10 @@
 <?php
 if ($this->allcontacts) :
 	?>
-	                       <section>
+	<div class="show-notes">
+		<a href="/contact/shownotesbytag/tag/<?php echo $tag['id']; ?>/tagname/<?php echo $tag['name']; ?>"><?php echo $this->translate('Show notes from these contacts'); ?></a>
+	</div>
+						<section>
 	                        <ul id="contacts" class="listing list-view clearfix">
                         	<?php
 							foreach ( $this->allcontacts as $task ) :
@@ -95,6 +122,49 @@ if ($this->allcontacts) :
 		});
 });*/
 
+$(function(){
+	$('span.rename_tag').click(function(e){
+
+		$('div.rename_tag_form').show();
+
+		$('span.rename_tag').hide();
+		$('span.rename_tag_lbl').hide();
+		
+	});
+
+	$('input#rename_tag_submit').click(function(e){
+		var tag = $('input#tag').val();
+		var id = $('input#id_tag').val();
+
+		data = new Object();
+		data.id = id;
+		data.name = tag;
+		
+		if(tag.length > 0)
+		{
+			$.sajax('/contact/edittag',data,function(newdata){
+				if(newdata)
+				{
+					$('span.rename_tag_name').html(tag);
+
+					$('div.rename_tag_form').hide();
+					$('span#msg-edit-tag-exist').hide();
+					$('span.rename_tag').show();
+					$('span.rename_tag_lbl').show();
+				} else {
+					$('span#msg-edit-tag-exist').show();
+				}
+			});
+		}
+	});
+
+	$('input#rename_tag_close').click(function(e){
+		$('div.rename_tag_form').hide();
+
+		$('span.rename_tag').show();
+		$('span.rename_tag_lbl').show();
+	});
+});
 
 </script>
 <?php  else :
@@ -115,4 +185,24 @@ if ($this->allcontacts) :
 ?>
 
 
-                      
+<style>
+span.rename_tag
+{
+	font-size: 10px;
+	margin-left: 10px;
+	color: #999;
+	cursor: pointer;
+}
+
+span.rename_tag:hover
+{
+	color: #000;
+	text-decoration: underline;
+}
+
+.show-notes {
+    background-color: #F0F5F8;
+    margin: 5px;
+    padding: 15px;
+}
+</style>                      

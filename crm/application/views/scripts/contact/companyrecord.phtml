@@ -5,7 +5,11 @@
                 <section class="main-section grid_7">
                     <div class="main-content grid_4 alpha">
                         <header class="clearfix">
+                        	<?php if($this->company['avatar']):?>
+                             <span class="avatar"><img width="55" height="55" src="<?php echo $this->company['avatar']; ?>" /></span>
+                             <?php else:?>
                              <span class="avatar"></span>
+                             <?php endif;?>
                              <hgroup>
                                  <h2>
                                      <?php echo $this->company['name']?>
@@ -34,8 +38,8 @@
                         		<thead></thead>
                         		<tbody>
 	                        		<tr>
-	                        			<td><a onclick="showNotes()" class="active"><?php echo $this->translate('Notes'); ?></a></td>
-	                        			<td><a onclick="showPeople()"><?php echo $this->translate('People'); ?></a></td>
+	                        			<td><a onclick="showNotes()" class="active" style="cursor:pointer;"><?php echo $this->translate('Notes'); ?></a></td>
+	                        			<td><a onclick="showPeople()" style="cursor:pointer;"><?php echo $this->translate('People'); ?> (<?php echo count($this->countPpl); ?>)</a></td>
 	                        		</tr>
                         		</tbody>
                         	</table>
@@ -43,7 +47,7 @@
 <!-- Начало на формата  -->
                             <form method="post" action="/contact/companyrecord/id/<?php echo $this->company['id']?>" enctype="multipart/form-data">
                            		<input type="hidden" name="id_company" value="<?php echo $this->company['id']?>" />
-                                 <textarea class="markItUpTextarea" name="note" style="min-height: 240px; max-height: 350px; width: 100%;"></textarea>
+                                 <textarea class="markItUpTextarea" name="note" style="min-height: 50px; max-height: 50px; width: 100%;"></textarea>
                                  
                                 <a class="toggle-file" style="cursor: pointer;"><b><?php echo $this->translate('Attach file'); ?></b></a>
 	                        	<div class="file-wrap" style="display:none;">
@@ -87,7 +91,7 @@
 	                        		<br />
 	                        		<b><?php echo $this->translate('Email this note'); ?></b>
 	                        		<br />
-	                        		<?php foreach ($this->profiles as $project):?>
+	                        		<?php foreach ($this->profiless as $project):?>
 	                        					<input type="checkbox" name="prfile[]" value="<?php echo $project['id']?>" /> <?php echo $project["firstname"] ?> <span class="label"><?php echo $project["lastname"] ?></span><br />
 	                        		<?php endforeach;?>
 	                        	</div>
@@ -99,7 +103,11 @@
 	                           	    <ul class="listing list-view">
                             <?php // Zend_Debug::dump($this->data);die;?>
                             <?php foreach($this->notes as $note):?>
+                            	<?php $note['avatar'] = $note['avatar']?$note['avatar']:'/images/user_32.png'; ?>
                                  <li class="note" id="<?php echo $note['id']?>">
+                                 	<div style="float:left; margin-right: 10px;">
+                                 		<img width="55" height="55" src="<?php echo $note["avatar"]; ?>"/>
+                                 	</div>	
                                  	<?php  if(isset($note["personfirstname"]) && $note["personfirstname"]):?>
                                     	<a href="/contact/personrecord/id/<?php echo $note['id_person']?>"> 
                                     		<?php  echo $note['personfirstname']?> 
@@ -125,7 +133,7 @@
                                      </span>
                                     <br />
                                     <span class="timestamp_left">
-                                    	<?php if($note['when']) { echo $note['when']; } else { echo $note['cdate'];}?><br/>
+                                    	<b><?php if($note['when']) {echo $this->translate(date("D", strtotime($note['when']))); echo ', '.$this->translate(date("M", strtotime($note['when']))); echo ' '.date("j Y", strtotime($note['when'])); } else { echo $this->translate(date("D", strtotime($note['cdate']))); echo ', '.$this->translate(date("M", strtotime($note['cdate']))); echo ' '.date("j Y", strtotime($note['cdate']));}?></b><br/>
                                     </span>
                                     <div class="entry-meta">
                                        <?php echo $note['profile']?>
@@ -161,13 +169,56 @@
                     </div>
                     <div class="preview-pane grid_3 omega">
                         <div class="content">
+                        	 <h3><?php echo $this->translate('Add new task about ');?> <?php echo $this->company['name']?>
+                                 <br />
+                                 <a  class="button has-popupballoon" >
+                                 	<?php echo $this->translate('Add task');?>
+                                 </a>
+                                 <div class="popupballoon top">
+	                            	<div id="taskForm">
+		                                <h3><?php echo $this->translate('Task about ');?>  <?php echo $this->company['name']?></h3>
+		                                <input type="text" id="tasknameC" /><br /><br />
+		                                <?php echo $this->translate('When it\'s due?');?><br />
+		                                <input type="date" id="taskdueC" /><br />
+		                                 <?php echo $this->translate('Who\'s the owner?' );?><br />
+		                                <select  id="ownerC" >
+		                                	<?php if($this->profiless)
+		                                	{
+		                                		foreach ($this->profiless as $key=>$prof)
+		                                		{
+		                                			echo '<option value="'.$prof['id'].'">'.$prof['firstname'].' '.$prof['lastname'].'</option>';
+		                                		}
+		                                	}else{
+		                                		
+		                                	}?>
+		                                </select>
+		                                 <?php echo $this->translate('What category?');?><br />
+		                                <select id="taskCatC">
+		                                	<?php if($this->cats)
+		                                	{
+		                                		foreach ($this->cats as $cat)
+		                                		{
+		                                			echo '<option value="'.$cat['id'].'">'.$this->translate($cat['name']).'</option>';
+		                                		}
+		                                	}else{
+		                                		
+		                                	}?>
+		                                </select>
+		                                <hr />
+		                                <br />
+		                                <a onclick="addTaskC()" id="addTaskC" class="button button-orange">  <?php echo $this->translate('Add task');?></a>
+		                                <button class="button button-gray close"><?php echo $this->translate('Cancel');?></button>
+	                            	</div>
+	                            </div>
+                           	 </h3>
+                           	 
                             <h3><?php echo $this->translate('Contacts');?>
                            		<ul class="action-buttons clearfix fr">
                                    <li><a href="/contact/editcompany/id/<?php echo $this->company['id']?>" class="button" rel="#overlay"><span class="edit"><img src="/images/icons/pencil.png"/></span></a></li>
                             	</ul>
                             </h3>
                             <ul class="profile-info">
-                            <?php if(isset($this->company['phone'])):?>
+                            <?php if(isset($this->company['phone']) && $this->company['phone']):?>
                            		<li class="mobile"><?php echo $this->company['phone']; ?><span><?php echo $this->translate('phone')?></span></li>
                             <?php endif;?>
                             <?php if(is_array($this->phones)):?>
@@ -175,9 +226,9 @@
 	                                <li class="mobile"><?php echo $phone['phone']; ?><span><?php echo $this->translate('phone')?></span></li>
 	                            <?php endforeach;?>
                             <?php endif;?>
-                            <?php if(isset($this->company['email'])):?>
+                            <?php if(isset($this->company['email']) && $this->company['email']):?>
                             	<li class="email">
-                            		<a href="mailto:<?php echo $this->company['email']; ?>">
+                            		<a href="mailto:<?php echo $this->company['email']; ?>?bcc=<?php echo $this->emailname; ?><?php echo $this->company['id']; ?>a<?php echo $this->profile->id; ?>@<?php echo $this->emaildomain; ?>">
                             			<?php echo $this->company['email']; ?>
                             		</a> 
                             		<span>
@@ -188,7 +239,7 @@
                             <?php if(is_array($this->emails)):?>
 	                            <?php foreach($this->emails as $phone):?>
 	                                <li class="email">
-	                                	<a href="mailto:<?php echo $phone['name']; ?>">
+	                                	<a href="mailto:<?php echo $phone['name']; ?>?bcc=<?php echo $this->emailname; ?><?php echo $this->company['id']; ?>a<?php echo $this->profile->id; ?>@<?php echo $this->emaildomain; ?>">
                             				<?php echo $phone['name']; ?>
                             			</a> 
 	                                	<span>
@@ -197,7 +248,7 @@
 	                                </li>
 	                            <?php endforeach;?>
                             <?php endif;?>
-                            <?php if(isset($this->company['website'])):?>
+                            <?php if(isset($this->company['website']) && $this->company['website']):?>
                             	<li class="website">
                             		<a target="_blank" href="http://<?php echo $this->company['website']; ?>" >
                             			<?php echo $this->company['website']; ?>
@@ -219,7 +270,7 @@
 	                                </li>
 	                            <?php endforeach;?>
 	                        <?php endif;?>
-	                        <?php if(isset($this->company['address'])):?>
+	                        <?php if(isset($this->company['address']) && $this->company['address']):?>
                             	<li class="email"><?php echo $this->company['address']; ?><span><?php echo $this->translate('address')?></span></li>
                             	<?php if(is_array($this->addresses)):?>
 		                            <?php foreach($this->addresses as $phone):?>
@@ -228,13 +279,17 @@
 	                       		 <?php endif;?>
 	                          <div id="google_maps_address" style="width: 98%; height:200px; margin: 2px auto;"></div>
 	                        <?php endif;?>
-                            
+	                        <?php if($this->additional):?>
+	                        	<?php foreach ($this->additional as $field):?>
+	                        		<?php if(isset($this->company[$field['name']]) && $this->company[$field['name']]):?>
+	                        			<li class=""><?php echo $this->company[$field['name']]; ?><span><?php echo $this->translate($field['label'])?></span></li>
+	                        		<?php endif;?>
+	                        	<?php endforeach;?>
+	                        <?php endif;?>
                             </ul>
                         </div>
                     </div>
-
                 </section>
-
                 <!-- Main Section End -->
                 
 <script type="text/javascript">
@@ -276,7 +331,7 @@ $(function(){
 				"autofit" 
 	);
 
-	
+	addToLastviewed(1, <?php echo $this->company['id']?>);
 });
 
 function showPeople()
@@ -292,17 +347,23 @@ function showPeople()
 		
 		$.each(newdata, function(pi,pv){
 
+			pv.phone = pv.phone==null?'':pv.phone;
+			pv.email = pv.email==null?'':pv.email;
+
 			var li = $('<li class="contact clearfix"></li>');
 			var divA = $('<div class="avatar"><img src="/images/user_32.png" /></div>');
 			var aName = $('<a  class="name"></a>');
 			var divEM = $('<div class="entry-meta"></div>');
 			var aEdit = $('<a><img src="/images/icons/pencil.png" /></a>');
 			var aDelete = $('<a ><img src="/images/icons/delete.png" /></a>');
-
+			
+			
 			li.append(divA);
 			aName.attr('href', '/contact/personrecord/id/'+pv.id);
 			aName.html(pv.name);
 			li.append(aName);
+			var spanC = $('<div class="meta"><a href="mailto:'+pv.email+'?bcc=<?php echo $this->emailname; ?><?php echo $this->company['id']; ?>a<?php echo $this->profile->id; ?>@<?php echo $this->emaildomain; ?>">'+pv.email+'</a> '+pv.phone+'</div>');
+			li.append(spanC);
 			aEdit.attr('href','/contact/editperson/id/'+pv.id);
 			aDelete.attr('href','/contact/deleteperson/id/'+pv.id);
 			divEM.html('');
@@ -311,11 +372,13 @@ function showPeople()
 			li.append(divEM);
 			ul.append(li);
 		});
-		$('ul#contacts').remove();
+		
 		$('table.tabs').after(ul);
-		$('table.tabs a').removeClass('active');
-		$('table.tabs a:last').addClass('active');
+		
 	});
+	$('ul#contacts').remove();
+	$('table.tabs a').removeClass('active');
+	$('table.tabs a:last').addClass('active');
 }
 
 function showNotes()
@@ -326,6 +389,26 @@ function showNotes()
 	$('div.notes').show();
 }
 
+function addTaskC()
+{	
+	
+	sdata = new Object();
+	sdata.id_company = '<?php echo $this->company['id']; ?>';
+	sdata.name = $('input#tasknameC').val();
+	sdata.owner = $('select#ownerC').val();
+	sdata.due = $('input#taskdueC').val();
+	sdata.cat = $('select#taskCatC').val();
+	sdata.publ = 1;
+	if(sdata.name != '' && sdata.due != "" && sdata.cat != "")
+	{
+		$.sajax("/task/add",sdata, function(newdata){
+			if(newdata.id){
+				$('.popupballoon').fadeOut(); 
+			}
+			
+		});
+	};
+};
 
 </script>
 <script type="text/javascript"src="/js/gmap3.js"></script>

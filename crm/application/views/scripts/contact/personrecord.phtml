@@ -7,7 +7,11 @@
 
                     <div class="main-content grid_4 alpha">
                         <header class="clearfix">
+                             <?php if($this->person['company']['avatar']):?>
+                             <span class="avatar"><img width="55" height="55" src="<?php echo $this->person['company']['avatar']; ?>" /></span>
+                             <?php else:?>
                              <span class="avatar"></span>
+                             <?php endif;?>
                              <hgroup>
                                  <h2>
                                      <?php echo $this->person['firstname']?> <?php echo $this->person['lastname']?>
@@ -37,7 +41,7 @@
                             <form method="post" action="/contact/personrecord/id/<?php echo $this->person['id']?>" enctype="multipart/form-data">
                            		 <input type="hidden" name="id_person" value="<?php echo $this->person['id']?>" />
                                  <input type="hidden" name="id_company" value="<?php echo $this->person['company']['id']?>" />
-                                 <textarea class="markItUpTextarea" name="note" style="min-height: 240px; max-height: 350px; width: 100%;"></textarea>
+                                 <textarea class="markItUpTextarea" name="note" style="min-height: 50px; max-height: 50px; width: 100%;"></textarea>
                                  
                                 <a class="toggle-file" style="cursor: pointer;"><b><?php echo $this->translate('Attach file'); ?></b></a>
 	                        	<div class="file-wrap" style="display:none;">
@@ -81,7 +85,7 @@
 	                        		<br />
 	                        		<b><?php echo $this->translate('Email this note'); ?></b>
 	                        		<br />
-	                        		<?php foreach ($this->profiles as $project):?>
+	                        		<?php foreach ($this->profiless as $project):?>
 	                        					<input type="checkbox" name="prfile[]" value="<?php echo $project['id']?>" /> <?php echo $project["firstname"] ?> <span class="label"><?php echo $project["lastname"] ?></span><br />
 	                        		<?php endforeach;?>
 	                        	</div>
@@ -93,7 +97,13 @@
                                <ul class="listing list-view">
                             <?php // Zend_Debug::dump($this->data);die;?>
                             <?php foreach($this->notes as $note):?>
+                            	
                                  <li class="note" id="<?php echo $note['id']?>">
+                                 <?php if($note['avatar']): ?>
+                                 	<div style="float:left; margin-right: 10px;">
+                                 		<img width="55" height="55" src="<?php echo $note["avatar"]; ?>"/>
+                                 	</div>	
+                                 	<?php endif;?>
                                 	<?php if(isset($note["personfirstname"]) && $note["personfirstname"]):?>
                                     <!--  	<a href="/contact/personrecord/id/<?php echo $note['id_person']?>"> 
                                     		<?php // echo $note['personfirstname']?> 
@@ -120,7 +130,7 @@
                                      	<?php endif; ?>
                                      </span>
                                     <span class="timestamp_left_big">
-                                    	<b><?php if($note['when']) {echo $this->translate(date("D", strtotime($note['cdate']))); echo ', '.$this->translate(date("M", strtotime($note['cdate']))); echo ' '.date("j Y", strtotime($note['cdate'])); } else { echo $this->translate(date("D", strtotime($note['cdate']))); echo ', '.$this->translate(date("M", strtotime($note['cdate']))); echo ' '.date("j Y", strtotime($note['cdate']));}?></b><br/>
+                                    	<b><?php if($note['when']) {echo $this->translate(date("D", strtotime($note['when']))); echo ', '.$this->translate(date("M", strtotime($note['when']))); echo ' '.date("j Y", strtotime($note['when'])); } else { echo $this->translate(date("D", strtotime($note['cdate']))); echo ', '.$this->translate(date("M", strtotime($note['cdate']))); echo ' '.date("j Y", strtotime($note['cdate']));}?></b><br/>
                                     </span>
                                     <div class="entry-meta">
                                        <?php echo $note['profile']?>
@@ -156,13 +166,56 @@
 
                     <div class="preview-pane grid_3 omega">
                         <div class="content">
+                        	 <h3><?php echo $this->translate('Add new task about');?> <?php echo $this->person['firstname']?> <?php echo $this->person['lastname']?>
+                                 <a  class="button has-popupballoon" >
+                                 	<?php echo $this->translate('Add task');?>
+                                 </a>
+                                 <div class="popupballoon top">
+	                            	<div id="taskForm">
+		                                <h3><?php echo $this->translate('Task about');?>  <?php echo $this->person['firstname']?> <?php echo $this->person['lastname']?></h3>
+		                                <input type="text" id="tasknameP" /><br /><br />
+		                                <?php echo $this->translate('When it\'s due?');?><br />
+		                                <input type="date" id="taskdueP" /><br />
+		                                 <?php echo $this->translate('Who\'s the owner?' );?><br />
+		                                <select  id="ownerP" >
+		                                	<?php if($this->profiless)
+		                                	{
+		                                		foreach ($this->profiless as $key=>$prof)
+		                                		{
+		                                			echo '<option value="'.$prof['id'].'">'.$prof['firstname'].' '.$prof['lastname'].'</option>';
+		                                		}
+		                                	}else{
+		                                		
+		                                	}?>
+		                                </select>
+		                                 <?php echo $this->translate('What category?');?><br />
+		                                <select id="taskCatP">
+		                                	<?php if($this->cats)
+		                                	{
+		                                		foreach ($this->cats as $cat)
+		                                		{
+		                                			echo '<option value="'.$cat['id'].'">'.$this->translate($cat['name']).'</option>';
+		                                		}
+		                                	}else{
+		                                		
+		                                	}?>
+		                                	
+		                                </select>
+		                                <hr />
+		                                <br />
+		                                <a onclick="addTaskP()" id="addTaskP" class="button button-orange">  <?php echo $this->translate('Add task');?></a>
+		                                <button class="button button-gray close"><?php echo $this->translate('Cancel');?></button>
+	                            	</div>
+	                            </div>
+                           	 </h3>
+                        
                             <h3><?php echo $this->translate('Personal contact');?>
                             	<ul class="action-buttons clearfix fr">
                                    <li><a href="/contact/editperson/id/<?php echo $this->person['id']?>" class="button" rel="#overlay"><span class="edit"><img src="/images/icons/pencil.png"/></span></a></li>
                                 </ul>
                             </h3>
                             <ul class="profile-info">
-                            <?php if(isset($this->person['phone1'])):?>
+                            <?php if(isset($this->person['phone1']) && $this->person['phone1']):?>
                             	<li class="mobile"><?php echo $this->person['phone1']; ?> <span><?php echo $this->translate('phone')?></span></li>
                             <?php endif;?>
                             <?php if(is_array($this->phones)):?>
@@ -170,10 +223,10 @@
 	                                <li class="mobile"><?php echo $phone['phone']; ?><span><?php echo $this->translate('phone')?></span></li>
 	                            <?php endforeach;?>
                             <?php endif;?>
-                            <?php if(isset($this->person['email'])):?>
+                            <?php if(isset($this->person['email']) && $this->person['email']):?>
                             	<li class="email">
 	                            	 
-	                            	 <a href="mailto:<?php echo $this->person['email']; ?>">
+	                            	 <a href="mailto:<?php echo $this->person['email']; ?>?bcc=<?php echo $this->emailname; ?><?php echo $this->person['company']['id']; ?>a<?php echo $this->profile->id; ?>@<?php echo $this->emaildomain; ?>">
                             				<?php echo $this->person['email']; ?>
                             		</a> 
 	                            	<span>
@@ -184,7 +237,7 @@
                             <?php if(is_array($this->emails)):?>
 	                            <?php foreach($this->emails as $phone):?>
 	                                <li class="email">
-		                                <a href="mailto:<?php echo $phone['name']; ?>">
+		                                <a href="mailto:<?php echo $phone['name']; ?>?bcc=<?php echo $this->emailname; ?><?php echo $this->emailname; ?><?php echo $this->person['company']['id']; ?>a<?php echo $this->profile->id; ?>@<?php echo $this->emaildomain; ?>">
                             				<?php echo $phone['name']; ?>
                             			</a> 
 	                                	<span>
@@ -193,7 +246,7 @@
 	                                </li>
 	                            <?php endforeach;?>
                             <?php endif;?>
-                             <?php if(isset($this->person['website'])):?>
+                             <?php if(isset($this->person['website']) && $this->person['website']):?>
                             	<li class="website">
                             		<a target="_blank" href="http://<?php echo $this->person['website']; ?>" >
                             			<?php echo $this->person['website']; ?>
@@ -215,7 +268,7 @@
 	                                </li>
 	                            <?php endforeach;?>
 	                        <?php endif;?>
-	                        <?php if(isset($this->person['address'])):?>
+	                        <?php if(isset($this->person['address']) && $this->person['address']):?>
                             	<li class="email"><?php echo $this->person['address']; ?> <span><?php echo $this->translate('address')?></span></li>
                             <?php endif;?>
                             <?php if(is_array($this->addresses)):?>
@@ -225,6 +278,14 @@
 	                            	
 	                        <?php endif;?>
 	                        <div id="google_maps_address" style="width: 98%; height:200px; margin: 2px auto;"></div>
+	                        
+	                         <?php if($this->additional):?>
+	                        	<?php foreach ($this->additional as $field):?>
+	                        		<?php if(isset($this->person[$field['name']]) && $this->person[$field['name']]):?>
+	                        			<li class=""><?php echo $this->person[$field['name']]; ?><span><?php echo $this->translate($field['label'])?></span></li>
+	                        		<?php endif;?>
+	                        	<?php endforeach;?>
+	                        <?php endif;?>
                            </ul>
                            
                            <h3> <?php echo $this->person['company']['name']?> <?php echo $this->translate('contact information');?>
@@ -233,21 +294,21 @@
                                 </ul>
                             </h3>
                             <ul class="profile-info">
-                                 	<?php if(isset($this->person['company']['phone'])):?>
+                                 	<?php if(isset($this->person['company']['phone']) && $this->person['company']['phone']):?>
 		                            	<li class="mobile"><?php echo $this->person['company']['phone']; ?> <span><?php echo $this->translate('phone')?></span></li>
 		                            <?php endif;?>
-		                            <?php if(isset($this->person['company']['email'])):?>
+		                            <?php if(isset($this->person['company']['email']) && $this->person['company']['email']):?>
 		                            	<li class="email">
-		                            		<a href="mailto:<?php echo $this->person['company']['email']; ?>">
+		                            		<a href="mailto:<?php echo $this->person['company']['email']; ?>?bcc=<?php echo $this->emailname; ?><?php echo $this->person['company']['id']; ?>a<?php echo $this->profile->id; ?>@<?php echo $this->emaildomain; ?>">
 		                            			<?php  echo $this->person['company']['email']; ?> 
 		                            		</a>
 		                            		<span><?php echo $this->translate('email')?></span>
 		                            	</li>
 		                            <?php endif;?>
-		                            <?php if(isset($this->person['company']['address'])):?>
+		                            <?php if(isset($this->person['company']['address']) && $this->person['company']['address']):?>
 		                            	<li class="email"><?php echo $this->person['company']['address']; ?> <span><?php echo $this->translate('address')?></span></li>
 		                            <?php endif;?>
-		                            <?php if(isset($this->person['company']['website'])):?>
+		                            <?php if(isset($this->person['company']['website']) && $this->person['company']['website']):?>
 		                            	<li class="website">
 			                            	<a target="_blank" href="http://<?php echo $this->person['company']['website']; ?>">
 			                            		<?php echo $this->person['company']['website']; ?> 
@@ -266,6 +327,8 @@
                 <!-- Main Section End -->
 <script type="text/javascript">
 $(function(){
+	addToLastviewed(0, <?php echo $this->person['id']?>);
+	
 	var data = new Object();
 	data.count = 1;
 	data.location = 'personrecord';
@@ -303,9 +366,32 @@ $(function(){
 				},
 				"autofit" 
 	);
-	
 
+	
 });
+
+function addTaskP()
+{	
+	
+	var sdata = new Object();
+	sdata.id_person = '<?php echo $this->person['id']; ?>';
+	sdata.name = $('input#tasknameP').val();
+	sdata.owner = $('select#ownerP').val();
+	sdata.due = $('input#taskdueP').val();
+	sdata.cat = $('select#taskCatP').val();
+	sdata.publ = 1;
+	if(sdata.name != '' && sdata.due != "" && sdata.cat != "")
+	{
+		$.sajax("/task/add",sdata, function(newdata){
+			if(newdata.id){
+				$('.popupballoon').fadeOut(); 
+			}
+			
+		});
+	};
+};
+
+
 
 
 </script>

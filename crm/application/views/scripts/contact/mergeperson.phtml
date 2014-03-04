@@ -1,0 +1,57 @@
+<!-- Main Section -->
+
+<section class="main-section grid_7">
+	<div class="main-content">
+		<header>
+			<ul class="action-buttons clearfix fr">
+				<li>
+					<a href="/" class="button button-gray no-text help" rel="#overlay">
+						<span class="help"></span>
+					</a>
+				</li>
+			</ul>
+			<div class="view-switcher">
+			<h2><?php echo $this->translate('Merge contact')?></h2>
+			</div>
+		</header>
+		<section>
+		<section class="container_4 clearfix">
+		<ul id="contacts" class="listing list-view clearfix">
+        	<li class="contact clearfix">
+                <a href="/contact/personrecord/id/<?php echo $this->person['id']?>" class="name"><h2><?php echo $this->person['firstname'] ?> <?php echo $this->person['lastname'] ?></a></h2><br />
+                <?php if(isset($this->person['phone1']) && $this->person['phone1']):?>
+                      <?php echo $this->person['phone1']; ?> <span><?php echo $this->translate('phone')?></span><br />
+                 <?php endif;?>
+                 <?php if(isset($this->person['email']) && $this->person['email']):?>
+	                     <a href="mailto:<?php echo $this->person['email']; ?>">
+                            	<?php echo $this->person['email']; ?>
+                            	
+                          </a> 
+	                      <span>
+	                          <?php echo $this->translate('email')?>
+	                      </span>
+                 <?php endif;?>
+           </li>
+           <li class="contact clearfix">
+           		<form method="post">
+           			<input type="hidden" name="id" value="<?php echo $this->id?>">
+           			<select name="mergeid">
+           				<?php foreach ($this->people as $person):?>
+           					<option value="<?php echo $person['id']?>">
+           						<?php echo $person['name']?>  
+           						<?php $this->translate('from'); ?>
+           						<?php echo $person['company']?> 
+           					</option>
+           				<?php endforeach;?>
+           			</select>
+           			<input type="submit" value="<?php echo $this->translate('Merge')?>" name="submit" >
+           		</form>
+           </li>
+        </ul>
+		</section>
+	</div>
+</section>
+</script>
+
+
+

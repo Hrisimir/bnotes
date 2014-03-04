@@ -13,7 +13,7 @@
 <!-- Начало на формата  -->
                             <form method="post" action="/project/record/id/<?php echo $this->project['id']?>" enctype="multipart/form-data">
                            		 <input type="hidden" name="id_case" value="<?php echo $this->project['id']?>" />
-                                 <textarea class="markItUpTextarea" name="note" style="min-height: 140px; max-height: 250px; width: 100%;"></textarea>
+                                 <textarea class="markItUpTextarea" name="note" style="min-height: 50px; max-height: 50px; width: 100%;"></textarea>
                                  
                                 <a class="toggle-file" style="cursor: pointer;"><b><?php echo $this->translate('Attach file'); ?></b></a>
 	                        	<div class="file-wrap" style="display:none;">

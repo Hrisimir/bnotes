@@ -30,18 +30,14 @@
 <link rel="stylesheet" type="text/css" href="<?php echo $this->baseUrl('css/validationEngine.jquery.css');?>" />
 				<?php
 				if($this->data): ?>
-					<form method="post" action="/contact/importoptions/currentrow/<?php echo $this->currentrow + 1; ?>" id="import_options_form">
+					<form method="post" action="/contact/importsave" id="import_options_form">
+					<?php if($this->currentrow > 1):?>
+						<a href="/contact/importoptions/currentrow/<?php echo $this->currentrow - 1; ?>" id="prev" class="button button-gray" ><?php echo $this->translate('Previous'); ?></a>
+						<?php endif;?>
+						<a href="/contact/importoptions/currentrow/<?php echo $this->currentrow + 1; ?>" id="skip" class="button button-gray" ><?php echo $this->translate('Next'); ?></a>
+						<input name="submit" type="submit" id="finish" class="button button-gray" value="<?php echo $this->translate('Import'); ?>"/>
 					<table class="import_table">
 						<thead>
-							<tr>
-								<td> <b>&nbsp;<?php echo $this->translate('Contact type'); ?></b></td>
-								<td>
-									<select class="" name="type" id="contact_type">
-										<option value="person"><?php echo $this->translate('Person');?></option>
-										<option value="company"><?php echo $this->translate('Company');?></option>
-									</select>
-								</td>
-							</tr>
 							<tr>
 								<th style="padding: 5px 0"><?php echo $this->translate('Field type'); ?></th>
 								<th style="padding: 5px 0"><?php echo $this->translate('Field value'); ?></th>
@@ -53,8 +49,11 @@
 								<?php foreach ($row as $j=>$cell):?>
 									<tr>
 										<td>
-											<select class="field_type" name="field_type" id="">
+											<select class="field_type" name="field_type[]" id="">
 												<option value=""></option>
+												<option value="type">
+													<?php echo $this->translate('Type'); ?>
+												</option>
 												<option value="firstname">
 													<?php echo $this->translate('First name'); ?>
 												</option>
@@ -67,17 +66,20 @@
 												<option value="address">
 													<?php echo $this->translate('Address'); ?>
 												</option>
-											<!-- 	<option vaue="zip">
-													<?php // echo $this->translate('Zip'); ?>
+												<option value="zip">
+													<?php  echo $this->translate('Zip'); ?>
 												</option>
 												<option value="city">
-													<?php // echo $this->translate('City'); ?>
+													<?php  echo $this->translate('City'); ?>
 												</option>
 												<option value="country">
-													<?php // echo $this->translate('Country'); ?>
-												</option> -->
+													<?php  echo $this->translate('Country'); ?>
+												</option> 
 												<option value="phone">
 													<?php echo $this->translate('Phone'); ?>
+												</option>
+												<option value="fax">
+													<?php echo $this->translate('Fax'); ?>
 												</option>
 												<option value="email">
 													<?php echo $this->translate('E-mail'); ?>
@@ -85,10 +87,14 @@
 												<option value="website">
 													<?php echo $this->translate('Website'); ?>
 												</option>
+												<option value="background">
+													<?php echo $this->translate('Background'); ?>
+												</option>
+												
 											</select>
 										</td>
 										<td>
-											<input  class="" type="text" value="<?php echo $cell; ?>"  />
+											<span class="import_preview"> <?php echo $cell; ?></span>
 										</td>
 									</tr>
 								<?php endforeach;?>
@@ -98,8 +104,11 @@
 					</table>
 					<br />
 					<br />
-						<input name="submit" type="submit" id="finish" class="button button-gray" value="<?php echo $this->translate('Submit'); ?>"/>
-						<a href="/contact/importoptions/currentrow/<?php echo $this->currentrow + 1; ?>" id="skip" class="button button-gray" ><?php echo $this->translate('Skip'); ?></a>
+						<?php if($this->currentrow > 1):?>
+						<a href="/contact/importoptions/currentrow/<?php echo $this->currentrow - 1; ?>" id="prev" class="button button-gray" ><?php echo $this->translate('Previous'); ?></a>
+						<?php endif;?>
+						<a href="/contact/importoptions/currentrow/<?php echo $this->currentrow + 1; ?>" id="skip" class="button button-gray" ><?php echo $this->translate('Next'); ?></a>
+						<input name="submit" type="submit" id="finish" class="button button-gray" value="<?php echo $this->translate('Import'); ?>"/>
 				</form>
 				<?php endif;?>
 			</section>
@@ -128,7 +137,7 @@
 		});
 		$(this).val(val);
 
-		switch(val)
+		/* switch(val)
 		{
 			case 'firstname':
 				$(this).parent().parent().children().children('input').addClass('validate[required,maxSize[255]]');
@@ -182,12 +191,12 @@
 				break;
 			default:
 				break;
-		}
+		} */
 	});
 
-	$("#import_options_form").submit(function(){
+	/* $("#import_options_form").submit(function(){
 
-			if($('#contact_type').val() == 'person')
+			if($('#contact_type').val())
 			{
 				if($('input#firstname').val())
 				{
@@ -197,24 +206,24 @@
 						{
 							return true;
 						}else{
-							alert('<?php echo $this->translate('Company name is required in order to Import a Person'); ?>');
+							alert('<?php // echo $this->translate('Company name is required in order to Import a Person'); ?>');
 						}
 					
 					}else{
-						alert('<?php echo $this->translate('Lastname is required in order to Import a Person'); ?>');
+						alert('<?php // echo $this->translate('Lastname is required in order to Import a Person'); ?>');
 					}
 				}else{
-						alert('<?php echo $this->translate('Firstname is required in order to Import a Person'); ?>');
+						alert('<?php // echo $this->translate('Firstname is required in order to Import a Person'); ?>');
 				}
 			}else{
 				if($('input#company').val())
 				{
 					return true;
 				}else{
-					alert('<?php echo $this->translate('Company name is required in order to Import a Company'); ?>');
+					alert('<?php // echo $this->translate('Company name is required in order to Import a Company'); ?>');
 				}	
 			}
 			return false;
-	});
+	}); */
 	
 </script>
