@@ -19,13 +19,87 @@ class Model_Company extends Model_Abstract {
 		$this->_id = $_id;
 	}
 	
-public function fetchPhones()
+	public function merge($id, $newid)
+	{	
+		$table = $this->getTable();
+		$db = $table->getAdapter();
+		$newdata = $table->fetchRow('id = '.$newid)->toArray();
+		$olddata = $table->fetchRow('id = '.$id)->toArray();
+		$bind['id_company'] = $id;
+		
+		//update task
+		$where = $db->quoteInto('id_company = ?', $newid);
+		$db->update('task', $bind, $where);
+		
+		//update case_person
+		$where = $db->quoteInto('id_company = ?', $newid);
+		$db->update('case_company', $bind, $where);
+		
+		//update note
+		$where = $db->quoteInto('id_company = ?', $newid);
+		$db->update('note', $bind, $where);
+		
+		//update person_address
+		$where = $db->quoteInto('id_company = ?', $newid);
+		$db->update('company_address', $bind, $where);
+		
+		//update person_email
+		$where = $db->quoteInto('id_company = ?', $newid);
+		$db->update('company_email', $bind, $where);
+		
+		//update person_meta
+		$where = $db->quoteInto('id_company = ?', $newid);
+		$db->update('company_meta', $bind, $where);
+		
+		//update person_phone
+		$where = $db->quoteInto('id_company = ?', $newid);
+		$db->update('company_phone', $bind, $where);
+		
+		//update person_website
+		$where = $db->quoteInto('id_company = ?', $newid);
+		$db->update('company_website', $bind, $where);
+		
+		
+		//update tag_ref
+		$bindtr['id_ref'] = $id;
+		$where = $db->quoteInto('id_ref = ? and type = 2', $newid);
+		$db->update('tag_ref', $bindtr, $where);
+		
+		//update person
+		$where = $db->quoteInto('id_company = ?', $newid);
+		$db->update('person', $bind, $where);
+		
+		//update company
+		foreach ($newdata as $k=>$v)
+		{
+			if(!$v)$newdata[$k] = $olddata[$k];
+		}
+		
+		unset($newdata['id']);
+		$where = $db->quoteInto('id = ?', $id);
+		$table->update($newdata, $where);
+		$where = $db->quoteInto('id = ?', $newid);
+		$table->delete($where);
+		
+	}
+
+	public function fetchPhones()
 	{
 		$table = $this->getTable();
 		$db = $table->getAdapter();
 		$where = $db->quoteInto('id_company = ?', $this->_id);
 		$sql = $db->select()->from('company_phone')->where($where);
 		return $db->fetchAll($sql);
+	}
+	
+	public function getNumberOfPeople()
+	{
+		$table = $this->getTable();
+		$db = $table->getAdapter();
+		$where = $db->quoteInto('id_company = ?', $this->_id);
+		$select = $db->select()->from('person','id')->where($where);
+		
+		return $db->fetchAll($select);
 	}
 	
 	public function fetchEmails()
@@ -43,7 +117,22 @@ public function fetchPhones()
 		$db = $table->getAdapter();
 		$where = $db->quoteInto('id_company = ?', $this->_id);
 		$sql = $db->select()->from('company_address')->where($where);
-		return $db->fetchAll($sql);
+		
+		$addresses = $db->fetchAll($sql);
+		
+		if($addresses)
+		{
+			$coutries = $db->query('select id, name from nmcl_country')->fetchAll();
+			$address_type = $db->query('select id, name from nmcl_addresstype')->fetchAll();
+				
+			foreach ($addresses as $key => $value)
+			{
+				$addresses[$key]['country'] = $coutries;
+				$addresses[$key]['address_type'] = $address_type;
+			}
+		}
+		
+		return $addresses;
 	}
 	
 	public function fetchWebsites()
@@ -111,7 +200,7 @@ public function fetchPhones()
 		$where = $db->quoteInto('n.id_company = ?',$this->_id);
 		$select = $db->select()	->from(array('n'=>'note'))
 								->join(array('p'=>'profile'),'p.id = n.author',array( 'id_profile'=>'id','profile' => new Zend_Db_Expr("CONCAT(p.firstname, ' ', p.lastname)")))
-								->join(array('c'=>'company'),'c.id = n.id_company',array('id_company'=>'id','company'=>'name','cemail'=>'email'))
+								->join(array('c'=>'company'),'c.id = n.id_company',array('id_company'=>'id','company'=>'name','cemail'=>'email','avatar'))
 								->joinLeft(array('per'=>'person'),'per.id = n.id_person', array('id_person'=>'id','personfirstname'=>'firstname','personlastname'=>'lastname','title'))
 								->where($where)
 								->order('n.id desc')->limit($limit, $start);
@@ -129,13 +218,41 @@ public function fetchPhones()
 		$table = $this->getTable();
 		$db = $table->getAdapter();
 		$where = $db->quoteInto('id_company = ?', $this->_id);
+		$select = $db->select()->from('note')->where($where);
+		$notes = $db->fetchAll($select);
+		$modelActivity = new Model_Activity();
+		foreach ($notes as $note)
+		{
+			$modelActivity->setId($note['id']);
+				
+			try{
+				$modelActivity->deleteNote($note['id']);
+			}catch(Exception $e){
+		
+			}
+		}
 		return $db->delete('note', $where);
 	}
     
     public function delete()
     {
     	$table = $this->getTable();
-    	$table->delete('id = '.$this->_id);
+    	$company = $table->fetchRow('id = '.$this->_id)->toArray();
+    	$db = $table->getAdapter();
+    	$dbconf = $db->getConfig();
+    	$location = PUBLIC_PATH.$company['avatar'];
+    	
+    	if($table->delete('id = '.$this->_id))
+    	{
+	    	try{
+	    		unlink($location);
+	    	}
+	    	catch (Exception $e)
+	    	{
+	    		
+	    	}
+    	}
+    	
     }
     
     public function fetch()
@@ -149,7 +266,7 @@ public function fetchPhones()
     	$table = $this->getTable();
     	$db = $table->getAdapter();
     	
-    $where = $db->quoteInto('id_company = ?', $data["id"]);
+    	$where = $db->quoteInto('id_company = ?', $data["id"]);
    		
    		
    		$db->delete('company_phone',$where);
@@ -183,15 +300,66 @@ public function fetchPhones()
     	}
     	if(isset($data['address1']) && $data['address1'])
     	{
+    		
+    		$company_address = array();
+    		$company_address_columns = array('address1', 'city1', 'state1', 'zip1', 'country1', 'address_type1');
+    		
+    		foreach($data as $key => $value)
+    		{
+    			if(in_array($key, $company_address_columns))
+    			{
+    				foreach($value as $k => $v)
+    				{
+    					$company_address[$k][substr($key, 0, -1)] = $v;
+    				}
+    			}
+    		}
+    		
+    		foreach($company_address as $company)
+    		{
+    			$company['id_company'] = $data["id"];
+    			$db->insert('company_address', $company);
+    		}
+    		
+    		/*
     		foreach($data['address1'] as $email)
     		{	
     			$bind = array('id_company'=>$data["id"], 'address'=>$email, 'address_type'=>1);
     			$db->insert('company_address', $bind);
     		}
+    		*/
+    	}
+    	
+    	if(isset($data['access']))
+    	{
+    		switch ($data['access'])
+    		{
+    			case 0 :
+    			case 1 :
+    				$newdata['group'] = null;
+    				break;
+    			case 2 :
+    				$newdata['group'] = $data['group'];
+    				break;
+    		}
+    	
+    		$data['group'] = $newdata['group'];
     	}
     	
     	$data = $this->unsetNonTableFields($data);
     	$where = $db->quoteInto('id = ?', $data['id']);
+    	$table->update($data, $where);
+    	return true;
+    }
+    
+    public function changePermission($data)
+    {
+    	$table = $this->getTable();
+    	$db = $table->getAdapter();
+    
+    	$data = $this->unsetNonTableFields($data);
+    	$where = $db->quoteInto('id = ?', $data['id']);
+    		
     	$table->update($data, $where);
     	return true;
     }

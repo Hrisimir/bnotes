@@ -24,10 +24,12 @@ class Model_Task extends Model_Abstract
 	{
 		$table = $this->getTable();
 		$db = $table->getAdapter();
-		$where = $db->quoteInto('author = ? or public = 1', $this->getCurrentUser()->id);
+		$where = $db->quoteInto('author = ? or owner = ?', $this->getCurrentUser()->id);
 		$select = $db	->select()
 						->from(array('t'=>'task'))
-						->joinLeft(array('tc'=>'nmcl_taskcategory'),'tc.id = t.id_category',array('category'=>'name'));
+						->joinLeft(array('tc'=>'nmcl_taskcategory'),'tc.id = t.id_category',array('category'=>'name'))
+						->where($where)
+						->order('duedate desc');
 		return $db->fetchAll($select);
 	}
 	
@@ -43,9 +45,13 @@ class Model_Task extends Model_Abstract
 	{
 		$newdata['author'] = $this->getCurrentUser()->id;
 		$newdata['public'] = $data['publ'];
+		$newdata['owner'] = $data['owner'];
 		$newdata['duedate'] = date("Y-m-d H:i:s", strtotime($data['due']));
 		$newdata['name'] = $data['name'];
 		$newdata['id_category'] = $data['cat'];
+		if(isset($data['id_person']))$newdata['id_person'] = $data['id_person'];
+		if(isset($data['id_company']))$newdata['id_company'] = $data['id_company'];
+		if(isset($data['id_case']))$newdata['id_case'] = $data['id_case'];
 		return $this->getTable()->insert($newdata);
 	}
 	
@@ -58,8 +64,54 @@ class Model_Task extends Model_Abstract
 	{
 		$table = $this->getTable();
 		$db = $table->getAdapter();
-		$where = $db->quoteInto('author = ? or public = 1', $this->getCurrentUser()->id);
+		$where = $db->quoteInto('author = ? or owner = ?', $this->getCurrentUser()->id);
 		$select = $db->select()->from('task','count(id)')->where($where);
 		return $db->fetchOne($select);
+	}
+	
+	public function getTask()
+	{
+		$table = $this->getTable();
+		$db = $table->getAdapter();
+		$where = $db->quoteInto('id = ?', $this->_id);
+		$select = $db->select()->from('task')->where($where);
+
+		$task = $db->query($select)->fetchAll();
+		
+		if($task)
+		{
+			if(isset($task['0']['duedate']))
+			{
+				$task['0']['duedate'] = date("d-m-Y", strtotime($task['0']['duedate']));
+			}
+			return $task['0'];
+		} else {
+			return false;
+		}
+	}
+	
+	public function edit($data)
+	{
+		$table = $this->getTable();
+		$db = $table->getAdapter();
+		
+		$newdata['author'] = $this->getCurrentUser()->id;
+		$newdata['public'] = $data['publ'];
+		$newdata['owner'] = $data['owner'];
+		$newdata['duedate'] = date("Y-m-d H:i:s", strtotime($data['due']));
+		$newdata['name'] = $data['name'];
+		$newdata['id_category'] = $data['cat'];
+		if(isset($data['id_person']))$newdata['id_person'] = $data['id_person'];
+		if(isset($data['id_company']))$newdata['id_company'] = $data['id_company'];
+		if(isset($data['id_case']))$newdata['id_case'] = $data['id_case'];
+		
+		$where = $db->quoteInto('id = ?', $this->_id);
+
+		try {
+			return $table->update($newdata, $where);
+		} catch (Exception $e)
+		{
+			Zend_Debug::dump($e->getMessage());die;
+		}
 	}
 }
