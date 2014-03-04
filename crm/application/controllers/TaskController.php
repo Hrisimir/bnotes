@@ -28,7 +28,8 @@ class TaskController extends Zend_Controller_Action{
     {	
     	$this->_helper->layout()->disableLayout();
     	$data = $this->getRequest()->getParams();
-    	$data['publ'] = 1;
+    	//$data['publ'] = 1;
+    	
     	if(isset($data['name']) && isset($data['due']) && isset($data['cat']) && isset($data['publ']))
     	{	
     		$taskModel = new Model_Task();
@@ -40,7 +41,16 @@ class TaskController extends Zend_Controller_Action{
     
     public function editAction()
     {
-    	
+    	$this->_helper->layout()->disableLayout();
+    	$data = $this->getRequest()->getParams();
+    	//$data['publ'] = 1;
+    	//Zend_Debug::dump($data);die;
+    	if(isset($data['id']) && isset($data['name']) && isset($data['due']) && isset($data['cat']) && isset($data['publ']))
+    	{
+    		$taskModel = new Model_Task();
+    		$taskModel->setId($data['id']);
+    		$this->view->data =  $taskModel->edit($data);
+    	}
     }
     
  	public function deleteAction()
@@ -71,4 +81,18 @@ class TaskController extends Zend_Controller_Action{
     			$this->view->data = 0;
     	}
     }
+    
+    public function gettaskAction()
+    {
+    	$this->_helper->layout()->disableLayout();
+    	$id = $this->getRequest()->getParam('id');
+    	 
+    	if($id)
+    	{
+    		$taskModel = new Model_Task();
+    		$taskModel->setId($id);
+    		$this->view->data = $taskModel->getTask();
+    	}
+    }
+    
 }
