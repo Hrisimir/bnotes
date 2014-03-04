@@ -13,10 +13,53 @@ class IndexController extends Zend_Controller_Action
     {
     	$data = $this->getRequest()->getParams();
     	$noteModel = new Model_Activity();
+    	
+    	//$noteModel->getEmails();
+    	
     	$this->view->data = $noteModel->fetchAll();
     	$taskmodel = new Model_Task();
     	$this->view->tasks = $taskmodel->fetchAll();
+    	
+    	$tasktoday= null;
+    	$taskOverdue= null;
+    	$taskFuture= null;
+    	
+    	foreach($this->view->tasks as $task)
+    	{	
+    		switch ($task)
+    		{
+    			case date('Y-m-d', strtotime($task['duedate'])) == date('Y-m-d'):
+    				$tasktoday[] = $task;
+    				break;
+    			case date('Y-m-d', strtotime($task['duedate'])) < date('Y-m-d'):
+    				$taskOverdue[] = $task;
+    				break;
+    			case date('Y-m-d', strtotime($task['duedate'])) > date('Y-m-d'):
+    				$taskFuture[] = $task;
+    			default:
+    				break;
+    		}
+    		
+    		//if(date('Y-m-d', strtotime($task['duedate'])) == date('Y-m-d'))
+    			//$tasktoday[] = $task;
+    		
+    		//if(date('Y-m-d', strtotime($task['duedate'])) < date('Y-m-d'))
+    			//$taskOverdue[] = $task;
+    	}
+    	
+    	$this->view->taskOverdue = $taskOverdue;
+    	$this->view->taskFuture = $taskFuture;
+    	$this->view->tasktoday = $tasktoday;
     }
+    
+    public function getmailAction()
+    {	
+    	$this->_helper->layout()->disableLayout();
+    	$noteModel = new Model_Activity();
+    	$this->view->mails = $noteModel->getEmails();
+    	
+    }
+    
     public function autocompleterAction()
     {	
     	$this->_helper->layout()->disableLayout();
@@ -30,8 +73,11 @@ class IndexController extends Zend_Controller_Action
     {	
     	$this->_helper->layout()->disableLayout();
     	$data = $this->getRequest()->getParams();
+
     	switch($data['location'])
     	{	
+    		
+    		
     		case "projectrecord":
     			$taskModel = new Model_Project();
     			$taskModel->setId($data['id']);
@@ -49,8 +95,12 @@ class IndexController extends Zend_Controller_Action
     			break;
     		case "index":
     			$taskModel = new Model_Activity();
-	    		$this->view->data = $taskModel->fetchAll($data['count']);
-	    		
+    			if(isset($data['author']) && $data['author'])
+    			{
+	    			$this->view->data = $taskModel->fetchAll($data['count'],6,$data['author']);
+    			}else{
+    				$this->view->data = $taskModel->fetchAll($data['count']);
+    			}
     			break;
     		default:
 	    	$taskModel = new Model_Activity();
@@ -324,6 +374,17 @@ class IndexController extends Zend_Controller_Action
     	$this->view->profiles = $profileModel->fetchAll();
     	$this->view->groups = $groupModel->fetchAll();
     	$this->view->projects = $caseModel->fetchAll();
+    }
+    
+    public function searchnotesAction()
+    {
+    	$data = $this->getRequest()->getParams();
+    	
+    	if(isset($data['search_word']))
+    	{
+    		$modelActivity = new Model_Activity();
+    		$this->view->result = $modelActivity->searchNotes($data['search_word']);
+    	}
     }
 }
 
