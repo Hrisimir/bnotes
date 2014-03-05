@@ -96,7 +96,7 @@ class Model_Task extends Model_Abstract
 		{
 			if(isset($task['0']['duedate']))
 			{
-				$task['0']['duedate'] = date("d-m-Y", strtotime($task['0']['duedate']));
+				$task['0']['duedate'] = date("Y-m-d", strtotime($task['0']['duedate']));
 			}
 			return $task['0'];
 		} else {
