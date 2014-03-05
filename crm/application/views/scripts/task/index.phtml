@@ -36,6 +36,8 @@ if($this->profiles)
 	}
 }
 ?>
+
+
 <!-- Main Section -->
 
 <section class="main-section grid_7">
@@ -112,35 +114,7 @@ if($this->profiles)
                 				</div>
                 				<div class="popupballoonTask popupballoon top" >
 									<div id="taskForm" style="line-height: 2;">
-										<h3><?php echo $this->translate('Edit task');?></h3>
-										<input type="hidden" id="taskid" />
-										<input type="text" id="taskname" /><br />
-										<?php echo $this->translate('When it\'s due?');?><br />
-										<input type="date" id="taskdue" /><br />
-										 <?php echo $this->translate('Who\'s the owner?' );?><br />
-										<select  id="owner" >
-											<?php echo $profiles; ?>
-										</select>
-										 <?php echo $this->translate('What category?');?><br />
-										<select id="taskCat">
-											<?php echo $cats; ?>
-										</select>
-										<br>
-										<?php echo $this->translate('Company');?><br />
-										<select id="id_company">
-											<?php echo $companies; ?>
-										</select>
-										<br>
-										<?php echo $this->translate('Person');?><br />
-										<select id="id_person">
-											<?php echo $persons; ?>
-										</select>
-										<br>
-		                                <input type="checkbox" name="publictask" id="publictask" /> <span class="public-task-lbl"><?php  echo $this->translate('Let everyone see this task'); ?></span>
-										<hr />
-										<br />
-										<button id="editTask" class="button button-orange" onclick="editTask(this);">  <?php echo $this->translate('Edit task');?></button>
-										<button class="button button-gray close"><?php echo $this->translate('Cancel');?></button>
+										
 									</div>
 								</div>
                 			</td>
@@ -181,37 +155,6 @@ if($this->profiles)
 		                				</div>
 	                				</div>
 	                				<div class="popupballoonTask popupballoon top" >
-										<div id="taskForm" style="line-height: 2;">>
-											<h3><?php echo $this->translate('Edit task');?></h3>
-											<input type="hidden" id="taskid" />
-											<input type="text" id="taskname" /><br />
-											<?php echo $this->translate('When it\'s due?');?><br />
-											<input type="date" id="taskdue" /><br />
-											 <?php echo $this->translate('Who\'s the owner?' );?><br />
-											<select  id="owner" >
-												<?php echo $profiles; ?>
-											</select>
-											 <?php echo $this->translate('What category?');?><br />
-											<select id="taskCat">
-												<?php echo $cats; ?>
-											</select>
-											<br>
-											<?php echo $this->translate('Company');?><br />
-											<select id="id_company">
-												<?php echo $companies; ?>
-											</select>
-											<br>
-											<?php echo $this->translate('Person');?><br />
-											<select id="id_person">
-												<?php echo $persons; ?>
-											</select>
-											<br>
-                                			<input type="checkbox" name="publictask" id="publictask" /> <span class="public-task-lbl"><?php  echo $this->translate('Let everyone see this task'); ?></span>
-											<hr />
-											<br />
-											<button id="editTask" class="button button-orange" onclick="editTask(this);">  <?php echo $this->translate('Edit task');?></button>
-											<button class="button button-gray close"><?php echo $this->translate('Cancel');?></button>
-										</div>
 									</div>
 	                			</td>
 		                		<td style="padding: 2px;"> <input class="checkTask" type="checkbox" name="" id="<?php echo $task['id'] ?>"/></td>
@@ -252,36 +195,7 @@ if($this->profiles)
 	                				</div>
                 				</div>
                 				<div class="popupballoonTask popupballoon top" >
-									<div id="taskForm" style="line-height: 2;">>
-										<h3><?php echo $this->translate('Edit task');?></h3>
-										<input type="hidden" id="taskid" />
-										<input type="text" id="taskname" /><br />
-										<?php echo $this->translate('When it\'s due?');?><br />
-										<input type="date" id="taskdue" /><br />
-										 <?php echo $this->translate('Who\'s the owner?' );?><br />
-										<select  id="owner" >
-											<?php echo $profiles; ?>
-										</select>
-										 <?php echo $this->translate('What category?');?><br />
-										<select id="taskCat">
-											<?php echo $cats; ?>
-										</select>
-										<br>
-										<?php echo $this->translate('Company');?><br />
-										<select id="id_company">
-											<?php echo $companies; ?>
-										</select>
-										<br>
-										<?php echo $this->translate('Person');?><br />
-										<select id="id_person">
-											<?php echo $persons; ?>
-										</select>
-										<br>
-                                		<input type="checkbox" name="publictask" id="publictask" /> <span class="public-task-lbl"><?php  echo $this->translate('Let everyone see this task'); ?></span>
-										<hr />
-										<br />
-										<button id="editTask" class="button button-orange" onclick="editTask(this);">  <?php echo $this->translate('Edit task');?></button>
-										<button class="button button-gray close"><?php echo $this->translate('Cancel');?></button>
+									<div id="taskForm" style="line-height: 2;">
 									</div>
 								</div>
                 			</td>
@@ -323,36 +237,7 @@ if($this->profiles)
                 					</div>
                 				</div>
                 				<div class="popupballoonTask popupballoon top" >
-									<div id="taskForm" style="line-height: 2;">>
-										<h3><?php echo $this->translate('Edit task');?></h3>
-										<input type="hidden" id="taskid" />
-										<input type="text" id="taskname" /><br />
-										<?php echo $this->translate('When it\'s due?');?><br />
-										<input type="date" id="taskdue" /><br />
-										 <?php echo $this->translate('Who\'s the owner?' );?><br />
-										<select  id="owner" >
-											<?php echo $profiles; ?>
-										</select>
-										 <?php echo $this->translate('What category?');?><br />
-										<select id="taskCat">
-											<?php echo $cats; ?>
-										</select>
-										<br>
-										<?php echo $this->translate('Company');?><br />
-										<select id="id_company">
-											<?php echo $companies; ?>
-										</select>
-										<br>
-										<?php echo $this->translate('Person');?><br />
-										<select id="id_person">
-											<?php echo $persons; ?>
-										</select>
-										<br>
-		                                <input type="checkbox" name="publictask" id="publictask" /> <span class="public-task-lbl"><?php  echo $this->translate('Let everyone see this task'); ?></span>
-										<hr />
-										<br />
-										<button id="editTask" class="button button-orange" onclick="editTask(this);">  <?php echo $this->translate('Edit task');?></button>
-										<button class="button button-gray close"><?php echo $this->translate('Cancel');?></button>
+									<div id="taskForm" style="line-height: 2;">
 									</div>
 								</div>
                 			</td>
@@ -522,25 +407,44 @@ $(function(){
     	$('table tr').children('td:first-child').children('.taskWrap').children('.taskedit').hide();
     	
         var id = $(this).next().attr('id');
+
+        var taskPopUpBalloon = new Object();
         
         $.sajax('/task/gettask',{'id' : id},function(newdata){
 
-        	$(".popupballoonTask input#taskid").val(id);
-        	$(".popupballoonTask input#taskname").val(newdata.name);
-        	$(".popupballoonTask input#taskdue").val(newdata.duedate);
-        	$(".popupballoonTask select#owner").val(newdata.owner);
-        	$(".popupballoonTask select#taskCat").val(newdata.id_category);
-        	$(".popupballoonTask select#id_company").val(newdata.id_company);
-        	$(".popupballoonTask select#id_person").val(newdata.id_person);
+        	taskPopUpBalloon = $('<div id="taskPopUpBalloon"><h3><?php echo $this->translate("Edit task");?></h3> 	<input type="hidden" id="taskid" value="'+id+'" /> 	<input type="text" id="taskname" value="'+newdata.name+'" /><br /><?php echo $this->translate("When it\'s due?");?><br /> 	<input type="date" id="taskdue" data-value="'+newdata.duedate+'" value="'+newdata.duedate+'" /><br /><?php echo $this->translate("Who\'s the owner?" );?><br /> 	<select  id="owner" value="'+newdata.owner+'" ><?php echo $profiles; ?></select><?php echo $this->translate("What category?");?><br /> 	<select id="taskCat" value="'+newdata.id_category+'" ><?php echo $cats; ?></select> 	<br><?php echo $this->translate("Company");?><br /> 	<select id="id_company" value="'+newdata.id_company+'"><?php echo $companies; ?></select> 	<br><?php echo $this->translate("Person");?><br /> 	<select id="id_person"><?php echo $persons; ?></select> 	<br> 	<input type="checkbox" name="publictask" id="publictask" /> <span class="public-task-lbl"><?php  echo $this->translate("Let everyone see this task"); ?></span> 	<hr /> 	<br /> 	<button id="editTask" class="button button-orange" onclick="editTask(this);"><?php echo $this->translate("Edit task");?></button> 	<button class="button button-gray close" onclick="closeButton(this);"><?php echo $this->translate("Cancel");?></button>');
+        	//taskPopUpBalloon = $('<div id="taskPopUpBalloon"><h3><?php echo $this->translate("Edit task");?></h3> 	<input type="hidden" id="taskid" value="'+id+'" /> 	<input type="text" id="taskname" value="'+newdata.name+'" /><br /><?php echo $this->translate("When it\'s due?");?><br /> 	<input type="date" id="taskdue" value="'+newdata.duedate+'" /><br />');
+
+        	//taskPopUpBalloon.children("input#taskid").val(id);
+  			//taskPopUpBalloon.children("input#taskname").val(newdata.name);
+        	//$(".popupballoonTask input#taskid").val(id);
+        	//$(".popupballoonTask input#taskname").val(newdata.name);
+        	//$(".popupballoonTask input#taskdue").val(newdata.duedate);
+        	//$(".popupballoonTask select#owner").val(newdata.owner);
+        	//$(".popupballoonTask select#taskCat").val(newdata.id_category);
+        	//$(".popupballoonTask select#id_company").val(newdata.id_company);
+        	//$(".popupballoonTask select#id_person").val(newdata.id_person);
 
         	// attach calendar to date inputs
-            $(":date").dateinput({
-                format: 'dd-mm-yyyy',
-                trigger: false
-            });
-            
-        });
+            //$(":date").dateinput({
+              //  format: 'dd-mm-yyyy',
+                //trigger: false
+            //});
 
+            $('tr.taskRow'+id).children().children('.popupballoonTask').children("#taskForm").html(taskPopUpBalloon);
+            $('tr.taskRow'+id).children().children('.popupballoonTask').children("#taskForm").find("select#owner").val(newdata.owner);
+            $('tr.taskRow'+id).children().children('.popupballoonTask').children("#taskForm").find("select#taskCat").val(newdata.id_category);
+            $('tr.taskRow'+id).children().children('.popupballoonTask').children("#taskForm").find("select#id_company").val(newdata.id_company);
+            $('tr.taskRow'+id).children().children('.popupballoonTask').children("#taskForm").find("select#id_person").val(newdata.id_person);
+
+            $('tr.taskRow'+id).children().children('.popupballoonTask').children("#taskForm").find(":date").dateinput({
+                format: 'dd-mm-yyyy',
+                trigger: false,
+                value: newdata.duedate
+            }).val(newdata.duedate);
+
+        });
+        
         $('.popupballoonTask').fadeOut();
         $(this).parent().parent().parent().next('.popupballoonTask').fadeIn();
         
@@ -715,6 +619,11 @@ function checkTaskCount()
 	{
 		$('table#taskFuture').next('.no-task').show();
 	}
+}
+
+function closeButton(e)
+{
+	$('.popupballoon').fadeOut();
 }
 </script>
 
