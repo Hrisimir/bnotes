@@ -257,30 +257,55 @@ class Model_Activity extends Model_Abstract {
 									mb_internal_encoding("UTF-8");
 									$m['subject'] = mb_decode_mimeheader($message->subject);
 									
-							//	if (strtok($part->contentType, ';') == 'text/html' || strtok($part->contentType, ';') == 'text/plain' )
-								//{	
-								
-									switch($part->contentTransferEncoding )
-									{
-										case 'base64':
-											$m['text'] .= mb_convert_encoding(base64_decode($part->getContent()), 'UTF-8', $m['encoding']);
-											break;
-										case 'quoted-printable':
-											$m['text'] .= mb_convert_encoding(quoted_printable_decode( $part->getContent()), 'UTF-8',$m['encoding']);
-											break;
-										default:
-											$m['text'] .= $part->getContent();
+									if (strtok($part->contentType, ';') == 'text/html' || strtok($part->contentType, ';') == 'text/plain' )
+									{	
+										switch($part->contentTransferEncoding )
+										{
+											case 'base64':
+												$m['text'] .= strip_tags(mb_convert_encoding(base64_decode($part->getContent()), 'UTF-8', $m['encoding']));
+												break;
+											case 'quoted-printable':
+												$m['text'] .= strip_tags(mb_convert_encoding(quoted_printable_decode( $part->getContent()), 'UTF-8',$m['encoding']));
+												break;
+											default:
+												$m['text'] .= strip_tags($part->getContent());
+										}
+									} else {
+										
+										$parts = $message->getPart(1);
+										
+										foreach (new RecursiveIteratorIterator($parts) as $multyPart) {
+											try {
+												$m['text'] = imap_utf8($headers["from"])." \n";
+												$m['encoding'] = $multyPart->getHeaderField('content-type', 'charset');
+												mb_internal_encoding("UTF-8");
+												$m['subject'] = mb_decode_mimeheader($message->subject);
+													
+												if (strtok($multyPart->contentType, ';') == 'text/html' || strtok($multyPart->contentType, ';') == 'text/plain' )
+												{
+													switch($multyPart->contentTransferEncoding )
+													{
+														case 'base64':
+															$m['text'] .= strip_tags(mb_convert_encoding(base64_decode($multyPart->getContent()), 'UTF-8', $m['encoding']));
+															break;
+														case 'quoted-printable':
+															$m['text'] .= strip_tags(mb_convert_encoding(quoted_printable_decode( $multyPart->getContent()), 'UTF-8',$m['encoding']));
+															break;
+														default:
+															$m['text'] .= strip_tags($multyPart->getContent());
+													}
+												} 
+
+											} catch (Zend_Mail_Exception $e) {
+												// ignore
+											}
+										}
 									}
-									
-									
-								//}
 								} catch (Zend_Mail_Exception $e) {
 									// ignore
 								}
-								
-								
 							}
-							
+
 							try {
 								IF($m['text'])
 								{	
@@ -289,7 +314,7 @@ class Model_Activity extends Model_Abstract {
 									$db->insert('note', array('note'=>$m['text'],'id_company'=>$id_company, 'author'=>$author));
 									
 									$id_note = $db->lastInsertId();
-									
+									//$id_note = 5000;
 									//Za ATTACHMENTS
 									foreach (new RecursiveIteratorIterator($message) as $part) {
 										$attachments = array();
@@ -326,8 +351,14 @@ class Model_Activity extends Model_Abstract {
 												
 											$dbconf = $db->getConfig();
 										
-											$path =  '/notes/'.$dbconf['dbname'].'/files/'.$id_note.'/'.$filename;
-												
+											$directory = PUBLIC_PATH.DIRECTORY_SEPARATOR.'notes'.DIRECTORY_SEPARATOR.$dbconf['dbname'].DIRECTORY_SEPARATOR.'files'.DIRECTORY_SEPARATOR.$id_note;
+											
+											if(!file_exists($directory))
+											{
+												mkdir($directory,0777,true);
+											}
+											
+											$path = $directory.DIRECTORY_SEPARATOR.$filename;
 											//create a new file and write the attachement to the file
 											$fh = fopen($path,'w') or die("can't open file");
 											fwrite($fh,$content);
@@ -335,7 +366,32 @@ class Model_Activity extends Model_Abstract {
 		
 											$modelFile = new Model_File();
 											//ze tip na fajla razbiva imeto po to4ka i vzima posledniq element. Do kolko 6te sraboti ...
-											$modelFile->add(array('id_note'=>$id_note, 'file'=>$path,'type'=>end(explode('.', $filename))));
+											$fileExt = end(explode('.', $filename));
+											
+											switch ($fileExt)
+											{
+												case 'jpg' || 'jpeg' || 'png':
+													$type = 1;
+													break;
+												case 'pdf':
+													$type = 2;
+													break;
+												case 'xls':
+													$type = 3;
+													break;
+												case 'doc':
+													$type = 4;
+													break;
+												case 'ppt':
+													$type = 5;
+													break;
+												default:
+													$type = 0;
+													break;
+											}
+											
+											$filePath = '/notes/'.$dbconf['dbname'].'/files/'.$id_note.'/'.$filename;
+											$modelFile->add(array('id_note'=>$id_note, 'file'=>$filePath,'type'=>$type));
 										}
 									} //end attachments
 								}
