@@ -138,7 +138,7 @@ if($this->profiles)
                 	<?php endif;?>
                 	</table>
                 	<div class="no-task" style="display: none;"><?php echo $this->translate('No tasks for today'); ?></div>
-                	
+                	<!-- 
                 	<h3><?php echo $this->translate('Your tasks'); ?></h3>
                 	<table style="width: 100%" id="taskAll">
                 	<?php if($this->tasks):?>
@@ -173,7 +173,7 @@ if($this->profiles)
 	                <?php endif;?>
                 	</table>
                 	<div class="no-task" style="display: none;"><?php echo $this->translate('No tasks for today'); ?></div>
-                	
+                	 -->
                 	<!-- Task Overdue -->
                 	<?php if($this->taskOverdue):?>
                  	<h3>
@@ -213,7 +213,7 @@ if($this->profiles)
 						</tr>
                 	<?php endforeach;?>
                		<?php else:?>
-                		<h3><?php echo $this->translate('No Overdue tasks'); ?> (<?php echo count($this->tasktoday)?>)</h3>
+                		<h3><?php echo $this->translate('No Overdue tasks'); ?> (<?php echo count($this->taskOverdue)?>)</h3>
                 	<?php endif;?>
                 	</table>
                 	<div class="no-task" style="display: none;"><?php echo $this->translate('No Overdue tasks'); ?></div>
@@ -255,7 +255,7 @@ if($this->profiles)
 						</tr>
                 	<?php endforeach;?>
                		<?php else:?>
-                		<h3><?php echo $this->translate('No Future Task'); ?> (<?php echo count($this->tasktoday)?>)</h3>
+                		<h3><?php echo $this->translate('No Future Task'); ?> (<?php echo count($this->taskFuture)?>)</h3>
                 	<?php endif;?>
                 	</table>
                 	<div class="no-task" style="display: none;"><?php echo $this->translate('No Future Task'); ?></div>
@@ -560,16 +560,16 @@ function editTask(e)
 {	
 	var data = new Object();
 
-	data.id = $(e).parent('#taskForm').children('input#taskid').val();
-	data.name = $(e).parent('#taskForm').children('input#taskname').val();
-	data.owner = $(e).parent('#taskForm').children('select#owner').val();
-	data.due = $(e).parent('#taskForm').children('input#taskdue').val();
-	data.cat = $(e).parent('#taskForm').children('select#taskCat').val();
-	data.id_company = $(e).parent('#taskForm').children('select#id_company').val();
-	data.id_person = $(e).parent('#taskForm').children('select#id_person').val();
+	data.id = $(e).parent().children('input#taskid').val();
+	data.name = $(e).parent().children('input#taskname').val();
+	data.owner = $(e).parent().children('select#owner').val();
+	data.due = $(e).parent().children('input#taskdue').val();
+	data.cat = $(e).parent().children('select#taskCat').val();
+	data.id_company = $(e).parent().children('select#id_company').val();
+	data.id_person = $(e).parent().children('select#id_person').val();
 	
 	//data.publ = 1;
-	if($(e).parent('#taskForm').children('input#publictask').is(":checked"))
+	if($(e).parent().children('input#publictask').is(":checked"))
 	{
 		data.publ = 1;
 	}else{
@@ -667,5 +667,20 @@ a.taskTypeBalloon, a.taskAuthorBalloon, a.taskCategoryBalloon
 	color: #ff0000;
 	font-weight: bold;
 	border-bottom: 1px dotted #477b96;
+}
+
+table tbody tr td:last-child {
+    width: 80px;
+}
+
+table tbody tr td:last-child a {
+    float: left;
+    margin: 0 5px;
+}
+
+#taskToday td, #taskAll td,
+#taskOverdue td, #taskFuture td
+{
+	vertical-align: middle;
 }
 </style>
