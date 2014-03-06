@@ -1243,22 +1243,22 @@ div.tools { padding: 10px; float:left}
 }
 
 .taskedit {
-    background: #FFFFFF;
-    border-bottom-left-radius: 5px;
+    background: none repeat scroll 0 0 #FFFFFF;
+    border-bottom-left-radius: 10px;
     border-color: #CCCCCC;
     border-image: none;
     border-style: solid none solid solid;
-    border-top-left-radius: 5px;
+    border-top-left-radius: 10px;
     border-width: 1px medium 1px 1px;
     float: left;
     font-size: 10px;
-    height: 30px;
-    left: -120px;
-	line-height: 25px;
-	margin: 5px 0;
+    height: 20px;
+    left: -100px;
+    line-height: 15px;
+    margin: 5px 0;
     position: absolute;
     vertical-align: middle;
-    width: 120px;
+    width: 100px;
     z-index: 10;
 }
 
@@ -1284,7 +1284,7 @@ div.tools { padding: 10px; float:left}
 
 .taskWrap {
     display: block;
-    height: 15px;
+	height: 30px;
     margin: 0;
     padding: 0;
     position: relative;
@@ -1295,5 +1295,9 @@ div.tools { padding: 10px; float:left}
 }
 
 .tools a {
-cursor: pointer;
+	cursor: pointer;
+}
+
+#id_company > option {
+    max-width: 100px;
 }
