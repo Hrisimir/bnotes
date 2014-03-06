@@ -584,13 +584,13 @@ $(document).ready(function() {
     
     
     /*
-     *  Изтриване на задача
+     *  Приключване на задача
      */
     $('.checkTask').click(
 		function(){
 			var data = new Object();
 			data.id = $(this).attr('id');
-			$.sajax("/task/delete",data, function(data){
+			$.sajax("/task/finish",data, function(data){
 				if(data){location.replace('/task/index'); }
 			});
 		}
