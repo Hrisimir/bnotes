@@ -315,11 +315,31 @@ $(function(){
 		}
 	);
 
+	var $window = $(window),
+    _buffer = null;
+
 	$(window).scroll(function() {   
-		   if($(window).scrollTop() + $(window).height() > $(document).height() - 100) {
-			   addNotes(data);
-		   }
-	});
+
+		if($(window).scrollTop() + $(window).height() > $(document).height() - 200) {
+	      if ( !_buffer ) {
+	 
+	         _buffer = setTimeout(function () {
+	 
+	        	 addNotes(data);
+	 
+	            _buffer = null;
+	 
+	         }, 500);
+	      }
+		}
+	   });
+	   
+	//$(window).scroll(function() {   
+	  // 	if($(window).scrollTop() + $(window).height() > $(document).height() - 100) {
+		//	addNotes(data);
+			
+	//   	}
+	//});
 
 	$("select#choose_author").change(function(){
 		$('li.note').remove();
