@@ -284,8 +284,8 @@ class Model_Person extends Model_Abstract
 							->join(array('c'=>'company'),'c.id = tr.id_ref and tr.type = 2',array('c.id',  'c.name', 'type' =>new Zend_Db_Expr("0")))
 							->where('tr.id_tag = ?', $tag);
 		$select = $db->select()->union(array($selectPerson, $selectCompany))
-							->order('name asc');
-						//	->limit($limitend, $limitstart);
+							->order('name asc')
+							->limit($limitend, $limitstart);
 		return $db->fetchAll($select);
     }
     
