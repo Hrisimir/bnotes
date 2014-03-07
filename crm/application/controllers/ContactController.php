@@ -193,12 +193,19 @@ class ContactController extends Zend_Controller_Action
     		$this->view->error = $data['error'];
     	}
     	$personModel = new Model_Person();
-    	$this->view->allcontacts = $personModel->fetchContagtsByTag($data['tag']);
     	
-    	$tagModel = new Model_Tag();
-    	$tagModel->setId($data['tag']);
-    	$this->view->tag = $tagModel->fetch();
-    
+    	if($this->getRequest()->isXmlHttpRequest())
+    	{
+    		$this->_helper->layout()->disableLayout();
+    		$this->view->allcontacts = $personModel->fetchContagtsByTag($data['tag'], $data['count'], 6);
+    	}else{
+    		$this->view->allcontacts = $personModel->fetchContagtsByTag($data['tag']);
+    		
+    		$tagModel = new Model_Tag();
+    		$tagModel->setId($data['tag']);
+    		$this->view->tag = $tagModel->fetch();
+    		$this->view->firstload = 1;
+    	}
     }
     public function mergepersonAction()
     {
