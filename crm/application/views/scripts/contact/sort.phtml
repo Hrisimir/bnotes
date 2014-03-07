@@ -1,5 +1,6 @@
+<?php if($this->firstload)
+{ ?>
 <!-- Main Section -->
-
 <section class="main-section grid_7">
 
 	<div class="main-content grid_5 alpha">
@@ -103,7 +104,7 @@ if ($this->allcontacts) :
 		               		</div>
                 </section>
                 <!-- Main Section End -->
-                
+              
 <script type="text/javascript">
 /*$(function(){
 	var data = new Object();
@@ -123,6 +124,18 @@ if ($this->allcontacts) :
 });*/
 
 $(function(){
+
+	var data = new Object();
+	data.count = <?php echo count($this->allcontacts);?>;
+	data.location = 'sort';
+	data.tag = '<?php echo $tag['id']; ?>';
+
+	$(window).scroll(function() {   
+		if($(window).scrollTop() + $(window).height() > $(document).height() - 100) {
+		   	addContactsByTag(data);
+	   	}
+	});
+	
 	$('span.rename_tag').click(function(e){
 
 		$('div.rename_tag_form').show();
@@ -136,13 +149,13 @@ $(function(){
 		var tag = $('input#tag').val();
 		var id = $('input#id_tag').val();
 
-		data = new Object();
-		data.id = id;
-		data.name = tag;
+		renameTagObj = new Object();
+		renameTagObj.id = id;
+		renameTagObj.name = tag;
 		
 		if(tag.length > 0)
 		{
-			$.sajax('/contact/edittag',data,function(newdata){
+			$.sajax('/contact/edittag',renameTagObj,function(newdata){
 				if(newdata)
 				{
 					$('span.rename_tag_name').html(tag);
@@ -166,6 +179,77 @@ $(function(){
 	});
 });
 
+function addContactsByTag(data)
+{
+	//console.dir(data);
+	$.sajax("/contact/sort", data, function(newdata){
+		if(newdata.length > 0)
+		{	
+			$.each(newdata, function(i,e){
+				e.phone = e.phone==null?'':e.phone;
+				e.email = e.email==null?'':e.email;
+				
+				switch(e.type)
+				{	
+					case "1":
+						e.avatar = (e.avatar)?e.avatar:'/images/user_32.png';
+						//var divCheck = $('<div class="check" style="float:left; padding: 0 10px"></div>');
+						//var inputCheck = $('<input name="contact" type="checkbox" class="person checks" id="'+e.id+'" />');
+						var inputHidden = $('<input name="contact-type" type="hidden" id="'+e.type+'" />');
+						var li = $('<li class="contact clearfix"></li>');
+						var div1 = $('<div class="avatar"><img src="'+e.avatar+'" /></div>');
+						var a = $('<a href="/contact/personrecord/id/'+e.id+'" class="name">'+e.name+'</a>');
+						var span = $('<div class="meta"><a href="mailto:'+e.email+'?bcc='+data.emailname+e.id_company+'a'+data.profile+'@'+data.emaildomain+'">'+e.email+'</a> '+e.phone+'</div>');
+						var a1 = $('<a href="/contact/editperson/id/'+e.id+'" ><img src="/images/icons/pencil.png" /></a>');
+						var a2 = $('<a href="/contact/deleteperson/id/'+e.id+'"><img src="/images/icons/delete.png" /></a>');
+						break;
+					case "0":
+						e.avatar = (e.avatar)?e.avatar:'/images/users_business_32.png';
+						//var divCheck = $('<div class="check" style="float:left; padding: 0 10px"></div>');
+						//var inputCheck = $('<input name="contact" type="checkbox" class="company checks" id="'+e.id+'" />');
+						var inputHidden = $('<input name="contact-type" type="hidden" id="'+e.type+'" />');
+						var li = $('<li class="company clearfix"></li>');
+						var div1 = $('<div class="avatar"><img src="'+e.avatar+'" /></div>');
+						var a = $('<a href="/contact/companyrecord/id/'+e.id+'" class="name">'+e.name+'</a>');
+						var span = $('<div class="meta_email"><a href="mailto:'+e.email+'?bcc='+data.emailname+e.id_company+'a'+data.profile+'@'+data.emaildomain+'">'+e.email+'</a> '+e.phone+'</div>');
+						var a1 = $('<a href="/contact/editcompany/id/'+e.id+'"><img src="/images/icons/pencil.png" /></a>');
+						var a2 = $('<a href="/contact/deletecompany/id/'+e.id+'"><img src="/images/icons/delete.png" /></a>');
+						break;
+				
+				}
+				
+				var p = $('<p class="tags"></p>');
+				if(e.tags)
+				{
+					$.each(e.tags, function(k,t){
+						var tag = $('<span class="tag tag'+t.id+'"><a class="tag" href="/contact/sort/tag/'+t.id+'">'+t.name+'</a></span>');
+						p.append(tag);
+					});
+				}
+				//var tag = $('<span class="tag tag<?php echo $tag['id']; ?>"><a class="tag" href="/contact/sort/tag/<?php echo $tag['id']?>"><?php echo $tag['name']?></a></span>');
+				
+				var div2 = $('<div class="entry-meta"></div>');
+				div2.append(a1);
+				div2.append(a2);
+				//inputCheck.click(function(){toogleTools(inputCheck);})
+				//divCheck.append(inputCheck);
+				//divCheck.append(inputHidden);
+				//li.append(divCheck);
+				li.append(div1);
+				li.append(a);
+				li.append(span);
+				li.append(div2);
+				li.append(p);
+				$("ul.listing").append(li);
+			});
+			
+			data.count = data.count + 6;
+		}
+	});
+	
+	return data;
+}
+
 </script>
 <?php  else :
 	?>
@@ -183,7 +267,6 @@ $(function(){
 </section>
 <?php endif;
 ?>
-
 
 <style>
 span.rename_tag
@@ -205,4 +288,11 @@ span.rename_tag:hover
     margin: 5px;
     padding: 15px;
 }
-</style>                      
+</style>
+
+<?php } else { 
+	echo Zend_Json_Encoder::encode($this->allcontacts);
+}?>
+
+
+                      
