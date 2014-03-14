@@ -511,7 +511,7 @@ class Model_Activity extends Model_Abstract {
 		$db = $this->getTable()->getAdapter();
 		
 		$modelPerson = new Model_Person();
-		$contacts = $modelPerson->fetchContagtsByTag($tag);
+		$contacts = $modelPerson->fetchContagtsByTag($tag, 0, 10000);
 		
 		if($contacts)
 		{

@@ -271,7 +271,7 @@ class Model_Person extends Model_Abstract
 		return $db->fetchAll($select);
     }
     
-    public function fetchContagtsByTag($tag, $limitstart = 0, $limitend = 6)
+    public function fetchContagtsByTag($tag, $limitstart = 0, $limitend = 30)
     {
     	$userId = $this->getCurrentUser()->id;
 		$table = $this->getTable();
@@ -333,7 +333,7 @@ class Model_Person extends Model_Abstract
 				
 				$is_required = $this->query('select contact_type from required_filters where name = "'.$k.'"');
 				
-				if(isset($is_required))
+				if(isset($is_required['0']))
 				{
 					if($is_required['0']['contact_type'] == '1')
 					{
