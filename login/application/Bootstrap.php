@@ -36,8 +36,8 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 	protected function _initTranslator(){
 		$domain = Zend_Registry::get('config2')->production->domain;
         if (!isset($_COOKIE['lang'])) {
-        	setcookie('lang', 'bg', time()+30672000, '/',$domain );
-        	$lang = 'bg';
+        	setcookie('lang', 'en', time()+30672000, '/',$domain );
+        	$lang = 'en';
         } else {
         	$lang = $_COOKIE['lang'];
         }

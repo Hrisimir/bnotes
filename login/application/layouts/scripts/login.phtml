@@ -3,7 +3,7 @@
 
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<title>Contact Management</title>
+<title><?php echo $this->translate('Contact Management'); ?></title>
 
 <link rel="stylesheet" type="text/css" href="<?php echo $this->baseUrl('css/reset.css');?>" />
 <link rel="stylesheet" type="text/css" href="<?php echo $this->baseUrl('css/grid.css');?>" />
@@ -39,7 +39,7 @@
     <footer>
         <div id="footer-inner" class="container_8 clearfix">
             <div class="grid_8">
-                <span class="fr"><a href="#">Documentation</a> | <a href="#">Feedback</a></span>Last account activity from 127.0.0.1 - <a href="#">Details</a> | &copy; 2013. All wrongs observed.
+                <span class="fr"><a href="#"><?php echo $this->translate('Documentation'); ?></a> | <a href="#"><?php echo $this->translate('Feedback'); ?></a></span>&copy; 2013.<?php echo $this->translate('All wrongs observed.'); ?>
             </div>
         </div>
     </footer>
