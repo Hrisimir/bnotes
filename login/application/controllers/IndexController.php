@@ -7,7 +7,7 @@ class IndexController extends Zend_Controller_Action {
 		$this->_helper->layout ()->setLayout ( 'login' );
 	}
 	/*
-	 * If post is send trys ot authenticate the user.
+	 * If post is sent trys to authenticate the user.
 	 * If a match is found puts a cookie so the user can be connected to the right database. Redirects the user to the second app.
 	 */
 		public function indexAction() {

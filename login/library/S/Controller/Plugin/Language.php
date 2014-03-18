@@ -6,8 +6,8 @@ class S_Controller_Plugin_Language extends Zend_Controller_Plugin_Abstract
     {
         $ini = '';
 		if (!isset($_COOKIE['lang'])) {
-            setcookie('lang', 'bg', time()+30672000, '/', Zend_Registry::get('config2')->production->domain);
-            $lang = 'bg';
+            setcookie('lang', 'en', time()+30672000, '/', Zend_Registry::get('config2')->production->domain);
+            $lang = 'en';
         } else {
             $lang = $_COOKIE['lang'];
         }
