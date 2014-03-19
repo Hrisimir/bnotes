@@ -1,7 +1,18 @@
 <?php
-
+/**
+ * 	Translation plugin
+ * 	@author Hrisimir Cholakov <hr.cholakov@gmail.com>
+ *  
+ */
 class S_Controller_Plugin_Language extends Zend_Controller_Plugin_Abstract
-{
+{	
+	/**
+	 * 	If a cookie with a language code is set reads translations and stores them in the registry. 
+	 * 	English is the default language.
+	 *  @param Zend_Controller_Request_Abstract $request
+	 *   
+	 */
+	
     public function preDispatch(Zend_Controller_Request_Abstract $request)
     {
         $ini = '';

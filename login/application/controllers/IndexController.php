@@ -1,13 +1,14 @@
 <?php
 class IndexController extends Zend_Controller_Action {
-	/*
-	 * Sets login layout   
+	/**
+	 * Sets the login layout   
 	 */
 	public function init() {
 		$this->_helper->layout ()->setLayout ( 'login' );
 	}
-	/*
-	 * If post is sent trys to authenticate the user.
+	/**
+	 * Displays the login form.
+	 * If a post is sent trys to authenticate the user.
 	 * If a match is found puts a cookie so the user can be connected to the right database. Redirects the user to the second app.
 	 */
 		public function indexAction() {
@@ -37,6 +38,11 @@ class IndexController extends Zend_Controller_Action {
 		}
 		$this->view->form = $form;
 	}
+	
+	
+	/**
+	 * Adds a new company to the system. Creates a separate database for the new company and redirects to the crm application.
+	 */
 	public function registerAction() {
 		$request = $this->getRequest ();
 		$form = new Application_Form_Register ();
@@ -46,13 +52,7 @@ class IndexController extends Zend_Controller_Action {
 				$data ['company'] = preg_replace ( "/[^A-Za-z]/", '', $data ['companyname'] );
 				$modelRegister = new Application_Model_Register ();
 				if ($data ['company'] == "") {
-					$company = $modelRegister->query ( 'select id  from `company` order by id desc limit 1' );
-					if (isset ( $company [0] )) {
-						$company [0] ["id"] = $company [0] ["id"] + 1;
-						$data ['company'] = 'company' . $company [0] ["id"];
-					} else {
-						$data ['company'] = 'company0';
-					}
+					$data ['company'] = $modelRegister->getName($data);
 				}
 				
 				if ($modelRegister->checkIfNotExists ( $data ['company'] )) {

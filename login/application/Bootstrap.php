@@ -1,14 +1,23 @@
 <?php
 
 class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
-{
+{	
+	
+	/**
+	 * Sets the default doctype to XHTML1_STRICT
+	 * @return void
+	 */
+	
     protected function _initDoctype()
     {
         $this->bootstrap('view');
         $view = $this->getResource('view');
         $view->doctype('XHTML1_STRICT');
     }
-    
+    /**
+     * Reads the configuratinon files and stores them in the registry for later use.
+     *  @return Zend_Config $config - Returns Instance of Zend_Config containing Database connection information.
+     */
     protected function _initConfig ()
     {
     	$config = new Zend_Config_Ini(APPLICATION_PATH . '/configs/database.ini');
@@ -17,6 +26,12 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
     	Zend_Registry::set('config', $config);
     	return $config;
     }
+    
+    /**
+     * Returns an instance of the default adapter
+     * @return Zend_Db_Adapter $db <Instance of Zend_DB_Adapter>  
+     * 
+     */
     protected function _initDatabase ()
     {
     	$db = null;
@@ -31,7 +46,12 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
     	
     	return $db;
     }
-    
+    /**
+     * 	If a cookie with a language code is set reads translations and stores them in the registry. 
+	 * 	English is the default language.
+     * @return Zend_Translate  
+     *
+     */
     
 	protected function _initTranslator(){
 		$domain = Zend_Registry::get('config2')->production->domain;

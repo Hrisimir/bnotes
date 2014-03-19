@@ -5,11 +5,17 @@ class Application_Model_Register extends Application_Model_Abstract
 	protected $_dbname;
 	protected $_dbTableClass = 'Application_Model_DbTable_User'; 
 	
-	
+	/**
+	 * Sets database a name
+	 * @param string $name  */
 	public function setDatabase($name)
 	{
 		$this->_dbname = $name;
 	}
+	/**
+	 * Checks if a company with that name already exists.
+	 * @param string $name
+	 * @return boolean  */
 	
 	public function checkIfNotExists($name)
 	{
@@ -23,6 +29,27 @@ class Application_Model_Register extends Application_Model_Abstract
 		return true;
 	}
 	
+	/**
+	 * Generates a company name.
+	 * @return string Company name */
+	
+	public function getName()
+	{
+		$company = $this->query ( 'select id  from `company` order by id desc limit 1' );
+		if (isset ( $company [0] )) {
+			$company [0] ["id"] = $company [0] ["id"] + 1;
+			Return 'company' . $company [0] ["id"];
+		} else {
+			Return 'company0';
+		}
+		
+	}
+	
+	/**
+	 * Checks if a username is already taken.
+	 * @param string $name
+	 * @return boolean  */
+	
 	public function checkIfNotExistsUser($name)
 	{
 		$table = new Application_Model_DbTable_Company();
@@ -34,6 +61,13 @@ class Application_Model_Register extends Application_Model_Abstract
 		if($user) return false;
 		return true;
 	}
+	
+	/**
+	 * Creates a database and makes a record in the database about the new company and user.
+	 * Creates an ini file with database connection data
+	 * @param array $data
+	 * @return int $id - The ID of the company  */
+	
 	
 	public function createDatabase($data)
 	{
@@ -56,12 +90,16 @@ class Application_Model_Register extends Application_Model_Abstract
 		
 		return $db->fetchOne($db->select()->from('company','id')->where('`database` = ? ',$this->_dbname));
 	}
+	
+	/**
+	 * Creates login and profile for the user in the newly created database.
+	 * @param array $data  - The array should containt firstname, lastname, email, username and password*/
+
 	public function registerUser($data)
 	{	
 		$db2 = Zend_Registry::get('db2');
 		$db2->insert('profile',array('id_role'=>1,'firstname'=>$data['firstname'],'lastname'=>$data['lastname'], 'email'=>$data['username']));
 		$db2->insert('user',array('id_profile'=>1, 'username'=>$data['username'], 'password'=>$data['password']));
-		//$db2->insert('company',array('name'=>$data['companyname'], 'author'=>1));
 		$data = $this->unsetNonTableFields($data);
 		$this->create($data);
 	}
