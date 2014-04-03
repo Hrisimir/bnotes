@@ -38,15 +38,19 @@ class TaskController extends Zend_Controller_Action{
     	{
     		switch ($task)
     		{
-    			case date('Y-m-d', strtotime($task['duedate'])) == date('Y-m-d'):
+    			case date('Y-m-d', strtotime($task['duedate'])) == date('Y-m-d') && $task['duedate']:
     				$tasktoday[] = $task;
     				break;
-    			case date('Y-m-d', strtotime($task['duedate'])) < date('Y-m-d'):
+    			case date('Y-m-d', strtotime($task['duedate'])) < date('Y-m-d') && $task['duedate']:
     				$taskOverdue[] = $task;
     				break;
-    			case date('Y-m-d', strtotime($task['duedate'])) > date('Y-m-d'):
+    			case date('Y-m-d', strtotime($task['duedate'])) > date('Y-m-d') && $task['duedate']:
     				$taskFuture[] = $task;
     			default:
+    				if(!isset($task['duedate']) && $task['id_taskdue'] == 5)
+    				{
+    					$taskFuture[] = $task;
+    				}
     				break;
     		}
     	
