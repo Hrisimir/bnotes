@@ -91,7 +91,19 @@
 	                                <h3><?php echo $this->translate('Add new task');?></h3>
 	                                <input type="text" id="taskname" /><br /><br />
 	                                <?php echo $this->translate('When it\'s due?');?><br />
+	                                <select id="id_taskdue">
+	                                	<?php if($this->taskdue)
+	                                	{
+	                                		foreach ($this->taskdue as $due)
+	                                		{
+	                                			echo '<option value="'.$due['id'].'">'.$this->translate($due['name']).'</option>';
+	                                		}
+	                                	}
+	                                	?>
+	                                </select><br />
+	                                <?php echo $this->translate('or' );  ?><br />
 	                                <input type="date" id="taskdue" /><br />
+	                                
 	                                 <?php echo $this->translate('Who\'s the owner?' );?><br />
 	                                <select  id="owner" >
 	                                	<?php if($this->profiles)
