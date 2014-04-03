@@ -3,6 +3,7 @@ $companies = '';
 $persons = '';
 $cats = '';
 $profiles = '';
+$taskdue = '';
 
 if($this->companies)
 {
@@ -35,6 +36,15 @@ if($this->profiles)
 		$profiles = $profiles. '<option value="'.$key.'">'.$this->translate($prof).'</option>';
 	}
 }
+
+if($this->taskdue)
+{
+	foreach ($this->taskdue as $key=>$taskd)
+	{
+		$taskdue = $taskdue. '<option value="'.$taskd['id'].'">'.$this->translate($taskd['name']).'</option>';
+	}
+}
+
 ?>
 <!-- Main Section -->
 
@@ -280,7 +290,11 @@ if($this->profiles)
 									</div>
 	                			</td>
 		                		<td style="padding: 2px;"> <input class="checkTask" type="checkbox" name="" id="<?php echo $task['id'] ?>"/></td>
-		                		<td style="border: 1px solid #fff; padding: 2px; background-color: #ddd" ><?php	echo date('Y-m-d',strtotime($task ['duedate'])); ?> <?php	echo $task ['category']; ?></td>
+		                		<td style="border: 1px solid #fff; padding: 2px; background-color: #ddd" >
+		                			
+		                			<?php	if($task['duedate']) { echo date('Y-m-d',strtotime($task ['duedate'])); } else { echo $this->translate('Date not set'); }?> 
+		                			<?php	echo $task ['category']; ?>
+		                		</td>
 								<td style="padding: 2px;"> <?php	echo $task ['name']; ?></td>
 								<?php if($task['id_company']):?>
 									<td style="padding: 2px;"><a class="company_info" id="<?php echo $task['id_company'];?>" style="cursor:pointer"  > <img  class="company_info" src="/images/icons/vcard.png" /></a></td>
@@ -388,10 +402,10 @@ $(function(){
 						            }
 						         },
 						         show: { 
-						            when: 'click', 
+						            when: 'mouseover', 
 						            solo: true // Only show one tooltip at a time
 						         },
-						         hide: 'unfocus',
+						         hide: 'mouseout',
 						         style: {
 						            tip: true, // Apply a speech bubble tip to the tooltip at the designated tooltip corner
 						            border: {
@@ -402,6 +416,8 @@ $(function(){
 						            width: 300 // Set the tooltip width
 						         }
 							});
+
+							$('a#'+sdata.id_person+'.person_info').trigger( "mouseover" );
 						}
 					});
 				};
@@ -444,10 +460,10 @@ $(function(){
 					            }
 					         },
 					         show: { 
-					            when: 'click', 
+					            when: 'mouseover', 
 					            solo: true // Only show one tooltip at a time
 					         },
-					         hide: 'unfocus',
+					         hide: 'mouseout',
 					         style: {
 					            tip: true, // Apply a speech bubble tip to the tooltip at the designated tooltip corner
 					            border: {
@@ -458,6 +474,8 @@ $(function(){
 					            width: 300 // Set the tooltip width
 					         }
 						});
+
+						$('a#'+sdata.id_company+'.company_info').trigger( "mouseover" );
 					}
 				});
 			};
@@ -484,7 +502,7 @@ $(function(){
         
         $.sajax('/task/gettask',{'id' : id},function(newdata){
 
-        	taskPopUpBalloon = $('<div id="taskPopUpBalloon"><h3><?php echo $this->translate("Edit task");?></h3> 	<input type="hidden" id="taskid" value="'+id+'" /> 	<input type="text" id="taskname" value="'+newdata.name+'" /><br /><?php echo $this->translate("When it\'s due?");?><br /> 	<input type="date" id="taskdue" data-value="'+newdata.duedate+'" value="'+newdata.duedate+'" /><br /><?php echo $this->translate("Who\'s the owner?" );?><br /> 	<select  id="owner" value="'+newdata.owner+'" ><?php echo $profiles; ?></select><?php echo $this->translate("What category?");?><br /> 	<select id="taskCat" value="'+newdata.id_category+'" ><?php echo $cats; ?></select> 	<br><?php echo $this->translate("Company");?><br /> 	<select id="id_company" value="'+newdata.id_company+'"><?php echo $companies; ?></select> 	<br><?php echo $this->translate("Person");?><br /> 	<select id="id_person"><?php echo $persons; ?></select> 	<br> 	<input type="checkbox" name="publictask" id="publictask" /> <span class="public-task-lbl"><?php  echo $this->translate("Let everyone see this task"); ?></span> 	<hr /> 	<br /> 	<button id="editTask" class="button button-orange" onclick="editTask(this);"><?php echo $this->translate("Edit task");?></button> 	<button class="button button-gray close" onclick="closeButton(this);"><?php echo $this->translate("Cancel");?></button>');
+        	taskPopUpBalloon = $('<div id="taskPopUpBalloon"><h3><?php echo $this->translate("Edit task");?></h3> 	<input type="hidden" id="taskid" value="'+id+'" /> 	<input type="text" id="taskname" value="'+newdata.name+'" /><br /><?php echo $this->translate("When it\'s due?");?><br /> <select  id="id_taskdue" value="'+newdata.id_taskdue+'" ><?php echo $taskdue; ?></select>	<?php echo $this->translate('or' );  ?> <br> <input type="date" id="taskdue" data-value="'+newdata.duedate+'" value="'+newdata.duedate+'" /><br /><?php echo $this->translate("Who\'s the owner?" );?><br /> 	<select  id="owner" value="'+newdata.owner+'" ><?php echo $profiles; ?></select><?php echo $this->translate("What category?");?><br /> 	<select id="taskCat" value="'+newdata.id_category+'" ><?php echo $cats; ?></select> 	<br><?php echo $this->translate("Company");?><br /> 	<select id="id_company" value="'+newdata.id_company+'"><?php echo $companies; ?></select> 	<br><?php echo $this->translate("Person");?><br /> 	<select id="id_person"><?php echo $persons; ?></select> 	<br> 	<input type="checkbox" name="publictask" id="publictask" /> <span class="public-task-lbl"><?php  echo $this->translate("Let everyone see this task"); ?></span> 	<hr /> 	<br /> 	<button id="editTask" class="button button-orange" onclick="editTask(this);"><?php echo $this->translate("Edit task");?></button> 	<button class="button button-gray close" onclick="closeButton(this);"><?php echo $this->translate("Cancel");?></button>');
         	
         	/*$(".popupballoonTask input#taskid").val(id);
         	$(".popupballoonTask input#taskname").val(newdata.name);
@@ -505,7 +523,13 @@ $(function(){
             $('tr.taskRow'+id).children().children('.popupballoonTask').children("#taskForm").find("select#taskCat").val(newdata.id_category);
             $('tr.taskRow'+id).children().children('.popupballoonTask').children("#taskForm").find("select#id_company").val(newdata.id_company);
             $('tr.taskRow'+id).children().children('.popupballoonTask').children("#taskForm").find("select#id_person").val(newdata.id_person);
+            $('tr.taskRow'+id).children().children('.popupballoonTask').children("#taskForm").find("select#id_taskdue").val(newdata.id_taskdue);
 
+            if(newdata.public == 1)
+            {
+            	$('tr.taskRow'+id).children().children('.popupballoonTask').children("#taskForm").find("input#publictask").attr("checked", "checked");
+            }
+            
             $('tr.taskRow'+id).children().children('.popupballoonTask').children("#taskForm").find(":date").dateinput({
                 format: 'dd-mm-yyyy',
                 trigger: false,
@@ -574,6 +598,7 @@ function editTask(e)
 	data.name = $(e).parent().children('input#taskname').val();
 	data.owner = $(e).parent().children('select#owner').val();
 	data.due = $(e).parent().children('input#taskdue').val();
+	data.id_taskdue = $(e).parent().children('select#id_taskdue').val();
 	data.cat = $(e).parent().children('select#taskCat').val();
 	data.id_company = $(e).parent().children('select#id_company').val();
 	data.id_person = $(e).parent().children('select#id_person').val();
@@ -591,7 +616,7 @@ function editTask(e)
 	{	
 		addcategoryandtask(val);
 	}else{
-		if(data.name != '' && data.due != "" && data.cat != "")
+		if(data.name != '' && (data.due != "" || data.id_taskdue != "6") && data.cat != "")
 		{
 			$.sajax("/task/edit",data, function(newdata){
 				//$(this).parents('.popupballoonTask').fadeOut();
