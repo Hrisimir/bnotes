@@ -120,7 +120,7 @@ function addToLastviewed(t,id)
 		var data = pushCompany(id);
 		$.cookie('latest', JSON.stringify(data), { path: '/'});
 	}
-	 console.dir(JSON.parse($.cookie('latest')));
+	 //console.dir(JSON.parse($.cookie('latest')));
 }
 
 function pushPerson(id)
@@ -558,6 +558,7 @@ $(document).ready(function() {
     			data.name = $('input#taskname').val();
     			data.owner = $('select#owner').val();
     			data.due = $('input#taskdue').val();
+    			data.id_taskdue = $('select#id_taskdue').val();
     			data.cat = $('select#taskCat').val();
     			
     			if($('#publictask').is(":checked"))
@@ -572,7 +573,7 @@ $(document).ready(function() {
 				{	
 					addcategoryandtask(val);
 				}else{
-	    			if(data.name != '' && data.due != "" && data.cat != "")
+	    			if(data.name != '' && (data.due != "" || data.id_taskdue != "6") && data.cat != "")
 	    			{
 	    				$.sajax("/task/add",data, function(data){
 	    					if(data.id){location.replace('/task/index'); }
@@ -596,6 +597,7 @@ $(document).ready(function() {
 		}
     );
     editNote();
+    
 });
 
 
@@ -1005,6 +1007,7 @@ function addNotesC(data)
 function addContacts(data)
 {
 	$.sajax("/contact/getcontacts", data, function(newdata){
+		//console.dir(newdata);
 		if(newdata.length > 0)
 		{	
 			$.each(newdata, function(i,e){
@@ -1021,7 +1024,7 @@ function addContacts(data)
 						var li = $('<li class="contact clearfix"></li>');
 						var div1 = $('<div class="avatar"><img src="'+e.avatar+'" /></div>');
 						var a = $('<a href="/contact/personrecord/id/'+e.id+'" class="name">'+e.name+'</a>');
-						var span = $('<div class="meta"><a href="mailto:'+e.email+'?bcc='+data.emailname+e.id_company+'a'+data.profile+'@'+data.emaildomain+'">'+e.email+'</a> '+e.phone+'</div>');
+						var span = $('<div class="meta"><a href="/contact/companyrecord/id/'+e.id_company+'" class="companyname">'+e.companyname+'</a><br><a href="mailto:'+e.email+'?bcc='+data.emailname+e.id_company+'a'+data.profile+'@'+data.emaildomain+'">'+e.email+'</a> '+e.phone+'</div>');
 						var a1 = $('<a href="/contact/editperson/id/'+e.id+'" ><img src="/images/icons/pencil.png" /></a>');
 						var a2 = $('<a href="/contact/deleteperson/id/'+e.id+'"><img src="/images/icons/delete.png" /></a>');
 						break;
@@ -1064,7 +1067,7 @@ function addContacts(data)
 				li.append(p);
 				$("ul.listing").append(li);
 			});
-			data.count = data.count + 6;
+			data.count = data.count + 50;
 		}
 	});
 	
