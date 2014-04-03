@@ -173,4 +173,31 @@ class Model_Tag extends Model_Abstract {
 		}
 		
 	}
+	
+	public function fetchTagByContact($id_contact, $type)
+	{
+		$table = $this->getTable();
+		$db = $table->getAdapter();
+		
+		if($type == '1') //person 
+		{
+			$selectPerson = $db->select()
+				->from(array('tr'=>'tag_ref'),'')
+				->join(array('t'=>'tag'),'t.id = tr.id_tag and tr.type = 1' ,array('t.id',  't.name'))
+				->where('tr.id_ref = ?', $id_contact);
+			
+			
+			return $db->fetchAll($selectPerson);
+		} else { //company
+			$selectCompany = $db->select()
+			->from(array('tr'=>'tag_ref'),'')
+			->join(array('t'=>'tag'),'t.id = tr.id_tag and tr.type = 2' ,array('t.id',  't.name'))
+			->where('tr.id_ref = ?', $id_contact);
+				
+				
+			return $db->fetchAll($selectCompany);
+			
+		}
+		
+	}
 }
