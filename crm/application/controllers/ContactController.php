@@ -193,18 +193,53 @@ class ContactController extends Zend_Controller_Action
     		$this->view->error = $data['error'];
     	}
     	$personModel = new Model_Person();
+    	$tagModel = new Model_Tag();
     	
     	if($this->getRequest()->isXmlHttpRequest())
     	{
     		$this->_helper->layout()->disableLayout();
-    		$this->view->allcontacts = $personModel->fetchContagtsByTag($data['tag'], $data['count'], 6);
+    		//$this->view->allcontacts = 
+    		$allcontacts = $personModel->fetchContagtsByTag($data['tag'], $data['count'], 6);
+    		//$this->view->contacttags = 
+    		
+    		if(count($allcontacts) > 0)
+    		{
+    			foreach ($allcontacts as $key => $contact)
+    			{
+    				$allcontacts[$key]['tags'] = $tagModel->fetchTagByContact($contact['id'], $contact['type']);
+    			}
+    		}
+    		
+    		//$contacttags = $tagModel->fetchAllTags();
+    		$this->view->allcontacts = $allcontacts;
+    		//Zend_Debug::dump($allcontacts);die;
     	}else{
     		$this->view->allcontacts = $personModel->fetchContagtsByTag($data['tag']);
     		
-    		$tagModel = new Model_Tag();
-    		$tagModel->setId($data['tag']);
-    		$this->view->tag = $tagModel->fetch();
+    		$tags = explode(',', $data['tag']);
+    		
+    		if(count($tags) > 1)
+    		{
+    			$arrayTags = array();
+    			
+    			foreach ($tags as $tag)
+    			{
+    				$tagModel->setId($tag);
+    				array_push($arrayTags, $tagModel->fetch());
+    			}
+    			
+    			$this->view->multipletags = $arrayTags;
+    		} else {
+    			$tagModel->setId($data['tag']);
+    			$this->view->onetag = $tagModel->fetch();
+    		}
+    		//Zend_Debug::dump($arrayTags);die;
+    		
+    		$this->view->tag = $data['tag'];
     		$this->view->firstload = 1;
+    		$this->view->contacttags = $tagModel->fetchAllTags();
+    		
+    		$this->view->tags = $tagModel->sortAndIndexArray($tagModel->fetchAll());
     	}
     }
     public function mergepersonAction()
@@ -221,6 +256,8 @@ class ContactController extends Zend_Controller_Action
     		$this->view->id = $data["id"];
     		if(isset($data['mergeid']) && $data['mergeid']){
     			$personModel->merge($data["id"],  $data['mergeid']);
+    			
+    			$this->view->msg = 'Persons were successfully merged';
     		}
     	}
     }
@@ -239,6 +276,8 @@ class ContactController extends Zend_Controller_Action
     		$this->view->id = $data["id"];
     		if(isset($data['mergeid']) && $data['mergeid']){
     			$companyModel->merge($data["id"],  $data['mergeid']);
+    			
+    			$this->view->msg = 'Companies were successfully merged';
     		}
     	}
     }
@@ -698,7 +737,7 @@ class ContactController extends Zend_Controller_Action
     	$personModel = new Model_Person();
     	if(isset($data['filters']))
     	{
-    		$this->view->data = $personModel->fetchAllConatacts($data['count'],6,$data['filters']);
+    		$this->view->data = $personModel->fetchAllConatacts($data['count'], 50, $data['filters']);
     	}else{
     		$this->view->data = $personModel->fetchAllConatacts($data['count']);
     	}
@@ -1155,5 +1194,25 @@ class ContactController extends Zend_Controller_Action
     		
     		$this->view->tag = $tagName;
     	}
+    }
+    
+    public function personautocompleterAction()
+    {
+    	$this->_helper->layout()->disableLayout();
+    	$request = $this->getRequest();
+    	$value = $request->getParam('query','');
+    	if($value === '') {die;}
+    	$model = new Model_Person();
+    	$this->view->result = $model->searchValueForMerga($value);
+    }
+    
+    public function companyautocompleterAction()
+    {
+    	$this->_helper->layout()->disableLayout();
+    	$request = $this->getRequest();
+    	$value = $request->getParam('query','');
+    	if($value === '') {die;}
+    	$model = new Model_Company();
+    	$this->view->result = $model->searchValueForMerga($value);
     }
 }
