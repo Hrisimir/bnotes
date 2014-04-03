@@ -1,6 +1,22 @@
 <!-- Main Section -->
 
 <section class="main-section grid_7">
+
+<?php if($this->msg) : ?>
+	<div style="padding: 5px;">
+		<div class="message success">
+			<?= $this->translate($this->msg); ?>
+		</div>
+	</div>
+<?php endif;?>
+<?php if($this->error) : ?>
+<div style="padding: 5px;">
+	<div class="message error">
+		<?= $this->translate($this->error); ?>
+	</div>
+</div>
+<?php endif;?>
+
 	<div class="main-content">
 		<header>
 			<ul class="action-buttons clearfix fr">
@@ -35,6 +51,9 @@
            <li class="contact clearfix">
            		<form method="post">
            			<input type="hidden" name="id" value="<?php echo $this->id?>">
+           			<input type="hidden" name="mergeid" id="mergeid" value="">
+           			<input class="merge-company" type="text" placeholder="<?php echo $this->translate('Enter contact name for merge');?>" />
+           			<!-- 
            			<select name="mergeid">
            				<?php foreach ($this->companies as $company):?>
            					<option value="<?php echo $company['id']?>">
@@ -42,6 +61,7 @@
            					</option>
            				<?php endforeach;?>
            			</select>
+           			 -->
            			<input type="submit" value="<?php echo $this->translate('Merge')?>" name="submit" >
            		</form>
            </li>
@@ -49,6 +69,29 @@
 		</section>
 	</div>
 </section>
+
+
+<script type="text/javascript">
+
+initMergeAutocompleter();
+
+function initMergeAutocompleter(){
+
+	$('.merge-company').unbind().autocomplete({
+		serviceUrl:'/contact/companyautocompleter/',  
+		minChars:2,
+		maxHeight:400,
+		width:330,
+		deferRequestBy: 500,
+		noCache: false,
+		params: { },
+		onSelect: function(value, data)
+		{ 
+			$('input#mergeid').val(data);
+		}
+	});
+}
+
 </script>
 
 

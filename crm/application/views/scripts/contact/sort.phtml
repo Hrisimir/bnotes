@@ -10,25 +10,48 @@
 		<div class="view-switcher">
 		<h2>
 			<?php 
+				$onetag = $this->onetag;
 				$tag = $this->tag;
+				$multipletags = $this->multipletags; 
 				
-				if($tag['name'])
+				if($multipletags)
 				{
-					echo '<span class="rename_tag_lbl">'.$this->translate('Contacts tagged with'). ' "<span class="rename_tag_name">'.$tag['name'].'</span>"'.'</span>';
-					echo '<span class="rename_tag">'.$this->translate('Rename tag').'</span>';
-					?>
+					echo '<span class="multitag_tag_lbl">'.$this->translate('Contacts tagged with');
 					
-					<div class="rename_tag_form" style="display: none;">
-						<input type="text" name="tag" id="tag" value="<?php echo $tag['name']; ?>"/>
-						<input type="hidden" name="id_tag" id="id_tag" value="<?php echo $tag['id']; ?>"/>
-						<input type="button" name="submit" id="rename_tag_submit" value="<?php echo $this->translate('Rename'); ?>" />
-						<input type="button" name="submit" id="rename_tag_close" value="<?php echo $this->translate('Close'); ?>" /> <br>
-						<span id="msg-edit-tag-exist" style="display: none; color: #ff0000; font-size: 8px;"><?php echo $this->translate('Tag with this name already exists'); ?></span>
-		            </div>
-		            
-					<?php 
-				} else {
-					echo $this->translate('No Contacts tagged with'). ' "'.$tag['name'].'"';
+					$lastTag = end($multipletags);
+					
+					foreach ($multipletags as $multitag)
+					{
+						if($multitag == $lastTag) {
+							echo '<span class="multitag_tag_name"> "'.$multitag['name'].'" </span>';
+						} else {
+							echo '<span class="multitag_tag_name"> "'.$multitag['name'].'", </span>';
+						}
+					}
+						
+					echo '</span>';
+				} else 
+				{
+					//Zend_Debug::Dump($tag);die;
+					if($onetag['name'])
+					{
+						echo '<span class="rename_tag_lbl">'.$this->translate('Contacts tagged with'). ' "<span class="rename_tag_name">'.$onetag['name'].'</span>"'.'</span>';
+						echo '<span class="rename_tag">'.$this->translate('Rename tag').'</span>';
+						echo '<span class="delete_tag">'.$this->translate('Delete tag').'</span>';
+						?>
+						
+						<div class="rename_tag_form" style="display: none;">
+							<input type="text" name="tag" id="tag" value="<?php echo $onetag['name']; ?>"/>
+							<input type="hidden" name="id_tag" id="id_tag" value="<?php echo $onetag['id']; ?>"/>
+							<input type="button" name="submit" id="rename_tag_submit" value="<?php echo $this->translate('Rename'); ?>" />
+							<input type="button" name="submit" id="rename_tag_close" value="<?php echo $this->translate('Close'); ?>" /> <br>
+							<span id="msg-edit-tag-exist" style="display: none; color: #ff0000; font-size: 8px;"><?php echo $this->translate('Tag with this name already exists'); ?></span>
+			            </div>
+			            
+						<?php 
+					} else {
+						echo $this->translate('No Contacts tagged with'). ' "'.$onetag['name'].'"';
+					}
 				}
 			?>
 			
@@ -54,9 +77,12 @@
 <?php
 if ($this->allcontacts) :
 	?>
-	<div class="show-notes">
-		<a href="/contact/shownotesbytag/tag/<?php echo $tag['id']; ?>/tagname/<?php echo $tag['name']; ?>"><?php echo $this->translate('Show notes from these contacts'); ?></a>
-	</div>
+	<?php if(!$multipletags)
+    { ?>
+		<div class="show-notes">
+			<a href="/contact/shownotesbytag/tag/<?php echo $onetag['id']; ?>/tagname/<?php echo $onetag['name']; ?>"><?php echo $this->translate('Show notes from these contacts'); ?></a>
+		</div>
+	<?php }?>
 						<section>
 	                        <ul id="contacts" class="listing list-view clearfix">
                         	<?php
@@ -72,6 +98,16 @@ if ($this->allcontacts) :
                                         <a href="/contact/editperson/id/<?= $task['id']?>"><img src="/images/icons/pencil.png" /></a>
 					    				<a href="/contact/deleteperson/id/<?= $task['id']?>"><img src="/images/icons/delete.png" /></a>
                                     </div>
+                                    <p class="tags">
+                                    		<?php if($this->contacttags):?>
+                           	 				<?php foreach ($this->contacttags as $l=> $tagG):?>
+                           	 					<?php if($tagG["type"] == 1 && $tagG["id_ref"] == $task['id']):?>
+                                    					<span class="tag tag<?php echo $tagG['id']; ?>"><a class="tag" href="/contact/sort/tag/<?php echo $tagG['id']?>"><?php echo $tagG['name']?></a></span>
+                                    				<?php endif;?>	
+                                    			<?php endforeach; ?>
+                                    		<?php endif; ?>	 
+                                    </p>
+	                                    
                               <?php else :?>
                              	 <li class="company clearfix">
                               		<div class="avatar"><img src="/images/users_business_32.png" /></div>
@@ -80,7 +116,15 @@ if ($this->allcontacts) :
                                         <a href="/contact/editcompany/id/<?= $task['id']?>"><img src="/images/icons/pencil.png" /></a>
 					    				<a href="/contact/deletecompany/id/<?= $task['id']?>"><img src="/images/icons/delete.png" /></a>
                                     </div>
-                              
+                              		<p class="tags">
+                                    		<?php if($this->contacttags):?>
+                           	 				<?php foreach ($this->contacttags as $l=> $tagG):?>
+                           	 					<?php if($tagG["type"] == 1 && $tagG["id_ref"] == $task['id']):?>
+                                    					<span class="tag tag<?php echo $tagG['id']; ?>"><a class="tag" href="/contact/sort/tag/<?php echo $tagG['id']?>"><?php echo $tagG['name']?></a></span>
+                                    				<?php endif;?>	
+                                    			<?php endforeach; ?>
+                                    		<?php endif; ?>	 
+                                    </p>
                               <?php endif;?>
                                 </li>
                               
@@ -98,13 +142,64 @@ if ($this->allcontacts) :
 	                            <?php echo $this->translate('or');?>
 	                            <a href="/contact/export/" class=""><b><?php echo $this->translate('Export');?></b></a>
 	                           	<?php echo $this->translate(' your contacts.');?>
+	                           	
+	                           	<div style="margin: 30px 0;">
+		                           	<?php if($multipletags)
+		                           	{ ?>
+		                           		<span class="select-multiple-tags" style="color: #FF0000;"><b><?php echo $this->translate('Select multimple Tags');?></b></span>
+									<?php } else {?>
+										<h3 style="width: 50%; float: left;"><?php echo $this->translate('Tags');?></h3>
+		                           		<a class="multimple-tags" style="cursor: pointer;" onclick="multipleTags(<?php echo $onetag['id']; ?>);"><b><?php echo $this->translate('Multimple Tags');?></b></a>
+		                           		<span class="select-multiple-tags" style="display: none; color: #FF0000;"><b><?php echo $this->translate('Select multimple Tags');?></b></span>
+									<?php }?>
+	                           	</div>
+	                           	<hr>
+	                           	<?php if($multipletags) 
+	                           	{ 
+	                           		$tagArr = explode(',', $tag);
+	                           	?>
+	                           		<div class="tags">
+                           				<?php if($this->tags):?>
+	                           				<?php foreach ($this->tags as $l=> $tags):?>
+		                           				<b><?php echo $l; ?></b><br />
+												<?php foreach ($tags as $t ):?>
+													<?php if(!in_array($t['id'], $tagArr)){ ?>
+		                           						<span class="tag tag<?php echo $t['id']; ?>"><a class="tag" href="/contact/sort/tag/<?php if($multipletags) echo $tag.','; ?><?php echo $t['id']?>"><?php echo $t['name']?></a></span>
+		                           					<?php } else { ?>
+		                           						<span class="tag<?php echo $t['id']; ?>"><a class="tagSelected" href="/contact/sort/tag/<?php echo $t['id']?>"><?php echo $t['name']?></a></span>
+		                           					<?php }?>
+		                           				<?php endforeach;?>
+		                           				<hr>
+	                           				<?php endforeach;?>
+                           				<?php endif;?>
+									</div>
+	                           	<?php 
+	                           	} 
+	                           	else 
+	                           	{ 
+	                           	?>
+		                           	<div class="tags">
+			                           	<?php if($this->tags):?>
+			                           	 <?php foreach ($this->tags as $l=> $tags):?>
+			                           	 	<b><?php echo $l; ?></b><br />
+			                           	 	
+			                           	 	<?php foreach ($tags as $t ):?>
+			                           	 		<span class="tag tag<?php echo $t['id']; ?>"><a class="tag" href="/contact/sort/tag/<?php echo $t['id']?>"><?php echo $t['name']?></a></span>
+			                           	 	<?php endforeach;?>
+			                           	 	<hr>
+			                           	  <?php endforeach;?>
+			                           	 <?php endif;?>
+			                        </div>
+			                    <?php }?>
 	                           	<ul class="profile-info">
 	                           	</ul>
+			                    </div>
+			                    
 			                    </div>
 		               		</div>
                 </section>
                 <!-- Main Section End -->
-              
+            
 <script type="text/javascript">
 /*$(function(){
 	var data = new Object();
@@ -122,13 +217,12 @@ if ($this->allcontacts) :
 			   }
 		});
 });*/
-
 $(function(){
 
 	var data = new Object();
 	data.count = <?php echo count($this->allcontacts);?>;
 	data.location = 'sort';
-	data.tag = '<?php echo $tag['id']; ?>';
+	data.tag = '<?php echo $this->tag; ?>';
 
 	$(window).scroll(function() {   
 		if($(window).scrollTop() + $(window).height() > $(document).height() - 100) {
@@ -145,6 +239,21 @@ $(function(){
 		
 	});
 
+	$('span.delete_tag').click(function(e){
+
+		var id = $('input#id_tag').val();
+
+		if(id)
+		{
+			$.sajax('/contact/deletetag', {'id' : id}, function(newdata){
+				if(newdata)
+				{
+					window.location.href = "/contact/index/msg/LBL_TAG_DELETED_SUCCESSFULLY";
+				} 
+			});
+		}
+	});
+	
 	$('input#rename_tag_submit').click(function(e){
 		var tag = $('input#tag').val();
 		var id = $('input#id_tag').val();
@@ -226,7 +335,6 @@ function addContactsByTag(data)
 						p.append(tag);
 					});
 				}
-				//var tag = $('<span class="tag tag<?php echo $tag['id']; ?>"><a class="tag" href="/contact/sort/tag/<?php echo $tag['id']?>"><?php echo $tag['name']?></a></span>');
 				
 				var div2 = $('<div class="entry-meta"></div>');
 				div2.append(a1);
@@ -240,6 +348,7 @@ function addContactsByTag(data)
 				li.append(span);
 				li.append(div2);
 				li.append(p);
+
 				$("ul.listing").append(li);
 			});
 			
@@ -250,6 +359,17 @@ function addContactsByTag(data)
 	return data;
 }
 
+function multipleTags(id_tag)
+{
+	$('.multimple-tags').hide();
+	$('.select-multiple-tags').show();
+	$('.multimple-tags').prev().hide();
+	
+	$.each($('div.tags span.tag a.tag'), function(i,e){
+		var href = $(e).attr('href');
+		$(e).attr('href', href+','+id_tag);
+	});
+}
 </script>
 <?php  else :
 	?>
@@ -269,7 +389,7 @@ function addContactsByTag(data)
 ?>
 
 <style>
-span.rename_tag
+span.rename_tag, span.delete_tag
 {
 	font-size: 10px;
 	margin-left: 10px;
@@ -277,16 +397,32 @@ span.rename_tag
 	cursor: pointer;
 }
 
-span.rename_tag:hover
+span.rename_tag:hover, span.delete_tag:hover
 {
 	color: #000;
 	text-decoration: underline;
+}
+
+span.delete_tag
+{
+	float: right;
 }
 
 .show-notes {
     background-color: #F0F5F8;
     margin: 5px;
     padding: 15px;
+}
+
+.tagSelected {
+    background-color: #666666 !important;
+    float: left;
+	padding: 1px 3px;
+	border-radius: 3px;
+	cursor:pointer;
+	height: 20px;
+	line-height: 20px;
+	margin: 2px;
 }
 </style>
 
