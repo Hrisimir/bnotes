@@ -237,7 +237,9 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 		$view = $layout->getView();
         $taskModel = new Model_Task();
 		$view->cats = $taskModel->fetchCategory();
+		$view->taskdue = $taskModel->fetchTaskDue();
     }
+    
     
 	protected function _initTasks()
     {
