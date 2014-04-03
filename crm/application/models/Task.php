@@ -45,17 +45,68 @@ class Model_Task extends Model_Abstract
 		return  $db->fetchAll($select);
 		
 	}
+	
+	public function fetchTaskDue()
+	{
+		$table = $this->getTable();
+		$db = $table->getAdapter();
+		$select = $db->select()->from('nmcl_taskdue',array('id','name'));
+		return  $db->fetchAll($select);
+	
+	}
+	
 	public function add($data)
 	{
 		$newdata['author'] = $this->getCurrentUser()->id;
 		$newdata['public'] = $data['publ'];
 		$newdata['owner'] = $data['owner'];
-		$newdata['duedate'] = date("Y-m-d H:i:s", strtotime($data['due']));
+		//$newdata['duedate'] = date("Y-m-d H:i:s", strtotime($data['due']));
 		$newdata['name'] = $data['name'];
 		$newdata['id_category'] = $data['cat'];
 		if(isset($data['id_person']))$newdata['id_person'] = $data['id_person'];
 		if(isset($data['id_company']))$newdata['id_company'] = $data['id_company'];
 		if(isset($data['id_case']))$newdata['id_case'] = $data['id_case'];
+
+		$day_of_week = date('N');
+		
+		if(!$data['due'])
+		{
+			switch ($data['id_taskdue'])
+			{
+				case '1':
+					$newdata['duedate'] = date("Y-m-d H:i:s");
+					break;
+				case '2':
+					$newdata['duedate'] = date("Y-m-d H:i:s", time()+86400);
+					break;
+				case '3':
+					if($day_of_week == '7')
+					{
+						$newdata['duedate'] = date("Y-m-d H:i:s");
+					} else {
+						$newdata['duedate'] = date("Y-m-d H:i:s", time()+(7 - $day_of_week)*86400);
+					}
+					break;
+				case '4':
+					$newdata['duedate'] = date("Y-m-d H:i:s", time()+(14 - $day_of_week)*86400);
+					break;
+				case '5':
+
+					break;
+				case '6':
+				
+					break;
+				default: 
+					$newdata['duedate'] = date("Y-m-d H:i:s");
+					break;
+			}
+		} else {
+			$newdata['duedate'] = date("Y-m-d H:i:s", strtotime($data['due']));
+			$newdata['id_taskdue'] = 6;
+		}
+		
+		$newdata['id_taskdue'] = $data['id_taskdue'];
+		
 		return $this->getTable()->insert($newdata);
 	}
 	
@@ -112,15 +163,55 @@ class Model_Task extends Model_Abstract
 		$newdata['author'] = $this->getCurrentUser()->id;
 		$newdata['public'] = $data['publ'];
 		$newdata['owner'] = $data['owner'];
-		$newdata['duedate'] = date("Y-m-d H:i:s", strtotime($data['due']));
+		//$newdata['duedate'] = date("Y-m-d H:i:s", strtotime($data['due']));
 		$newdata['name'] = $data['name'];
 		$newdata['id_category'] = $data['cat'];
 		if(isset($data['id_person']) && $data['id_person'] <> 'null') $newdata['id_person'] = $data['id_person'];
 		if(isset($data['id_company']) && $data['id_company'] <> 'null')$newdata['id_company'] = $data['id_company'];
 		if(isset($data['id_case']) && $data['id_case'] <> 'null')$newdata['id_case'] = $data['id_case'];
 		
+		$day_of_week = date('N');
+		
+		if(!$data['due'])
+		{
+			switch ($data['id_taskdue'])
+			{
+				case '1':
+					$newdata['duedate'] = date("Y-m-d H:i:s");
+					break;
+				case '2':
+					$newdata['duedate'] = date("Y-m-d H:i:s", time()+86400);
+					break;
+				case '3':
+					if($day_of_week == '7')
+					{
+						$newdata['duedate'] = date("Y-m-d H:i:s");
+					} else {
+						$newdata['duedate'] = date("Y-m-d H:i:s", time()+(7 - $day_of_week)*86400);
+					}
+					break;
+				case '4':
+					$newdata['duedate'] = date("Y-m-d H:i:s", time()+(14 - $day_of_week)*86400);
+					break;
+				case '5':
+		
+					break;
+				case '6':
+		
+					break;
+				default:
+					$newdata['duedate'] = date("Y-m-d H:i:s");
+					break;
+			}
+		} else {
+			$newdata['duedate'] = date("Y-m-d H:i:s", strtotime($data['due']));
+			$newdata['id_taskdue'] = 6;
+		}
+		
+		$newdata['id_taskdue'] = $data['id_taskdue'];
+		
 		$where = $db->quoteInto('id = ?', $this->_id);
-
+		
 		try {
 			return $table->update($newdata, $where);
 		} catch (Exception $e)
@@ -131,6 +222,8 @@ class Model_Task extends Model_Abstract
 	
 	public function filtertask($data)
 	{
+		//Zend_Debug::dump($data);die;
+		
 		$table = $this->getTable();
 		$db = $table->getAdapter();
 		
@@ -148,6 +241,7 @@ class Model_Task extends Model_Abstract
 			{
 				case 1:
 					$whereType = $db->quoteInto('duedate > ?', date('Y-m-d'));
+					$whereType = $whereType.$db->quoteInto(' or id_taskdue = ?', 5);
 					break;
 				case 2:
 					$whereType = $db->quoteInto('is_finished = ?', 1);
