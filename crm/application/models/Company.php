@@ -363,4 +363,27 @@ class Model_Company extends Model_Abstract {
     	$table->update($data, $where);
     	return true;
     }
+    
+    public function searchValueForMerga($value)
+    {
+    	$table = $this->getTable();
+    	$db = $table->getAdapter();
+    	$where = $db->quoteInto("name like ?", '%'.$value.'%');
+
+    	$select = $db->select()->from('company', array('id', 'name'))->where($where);
+    
+    	$data =  $db->fetchAll($select);
+    	$result['query'] = $value;
+    	$result['data'] = array();
+    	$result['suggestions'] = array();
+    	if($data)
+    	{
+    		foreach($data as $i=>$row)
+    		{
+    			$result['data'][$i] = $row['id'];
+    			$result['suggestions'][$i] = $row['name'];
+    		}
+    	}
+    	return $result;
+    }
 }
